@@ -1,0 +1,78 @@
+<mat-toolbar class="topbar">
+  <button
+    class="mobile-toggle"
+    mat-icon-button
+    type="button"
+    aria-label="Open menu"
+    (click)="mobileMenuOpen.emit()"
+  >
+    <mat-icon>menu</mat-icon>
+  </button>
+
+  <div class="topbar-left">
+    <button
+      class="icon-btn desktop-toggle"
+      mat-icon-button
+      type="button"
+      matTooltip="Toggle sidebar"
+      aria-label="Toggle sidebar"
+      (click)="sidebarToggle.emit()"
+    >
+      <mat-icon>menu_open</mat-icon>
+    </button>
+
+    <div>
+      <div class="topbar-title">{{ pageTitle$ | async }}</div>
+      <div class="breadcrumb">HelpDesk Pro / {{ pageTitle$ | async }}</div>
+    </div>
+  </div>
+
+  <label class="search-wrap" aria-label="Search tickets, users, or departments">
+    <mat-icon aria-hidden="true">search</mat-icon>
+    <input type="search" placeholder="Search tickets, users..." />
+    <span class="kbd">Ctrl K</span>
+  </label>
+
+  <div class="topbar-actions">
+    <button
+      class="icon-btn"
+      mat-icon-button
+      type="button"
+      matTooltip="Toggle theme"
+      aria-label="Toggle theme"
+      (click)="toggleTheme()"
+    >
+      <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
+
+    <button
+      class="icon-btn"
+      mat-icon-button
+      type="button"
+      matTooltip="Notifications"
+      aria-label="Open notifications"
+      (click)="notificationsToggle.emit()"
+    >
+      <mat-icon>notifications</mat-icon>
+      @if (hasUnreadNotifications) {
+        <span class="notif-dot" aria-hidden="true"></span>
+      }
+    </button>
+
+    <span class="divider-v" aria-hidden="true"></span>
+
+    <button class="avatar-button" mat-button type="button" [matMenuTriggerFor]="profileMenu">
+      <span class="avatar">KR</span>
+    </button>
+    <mat-menu #profileMenu="matMenu">
+      <button mat-menu-item type="button">
+        <mat-icon>person</mat-icon>
+        <span>Profile</span>
+      </button>
+      <button mat-menu-item type="button" routerLink="/auth/login">
+        <mat-icon>logout</mat-icon>
+        <span>Sign out</span>
+      </button>
+    </mat-menu>
+  </div>
+</mat-toolbar>

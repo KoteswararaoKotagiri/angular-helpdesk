@@ -8,6 +8,11 @@ export const routes: Routes = [
   },
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'auth/login'
+  },
+  {
+    path: '',
     canActivate: [authGuard],
     loadComponent: () =>
       import('./layout/main-layout/main-layout.component').then((m) => m.MainLayoutComponent),
@@ -35,6 +40,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: 'auth/login'
   }
 ];

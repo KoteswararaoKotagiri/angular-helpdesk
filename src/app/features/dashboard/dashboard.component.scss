@@ -1,0 +1,44 @@
+.page-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  font-size: 21px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.page-header p {
+  color: var(--text3);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.placeholder-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.placeholder-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  min-height: 128px;
+}
+
+@media (max-width: 900px) {
+  .placeholder-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .placeholder-grid {
+    grid-template-columns: 1fr;
+  }
+}

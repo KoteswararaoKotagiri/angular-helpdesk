@@ -1,0 +1,32 @@
+<div
+  class="sidebar-overlay"
+  [class.show]="isMobileSidebarOpen"
+  (click)="closeMobileSidebar()"
+  aria-hidden="true"
+></div>
+
+<app-notification-panel
+  [isOpen]="isNotificationPanelOpen"
+  (closed)="closeNotifications()"
+></app-notification-panel>
+
+<div class="app-shell">
+  <app-sidebar
+    [collapsed]="isSidebarCollapsed"
+    [mobileOpen]="isMobileSidebarOpen"
+    (closeMobile)="closeMobileSidebar()"
+  ></app-sidebar>
+
+  <main class="main">
+    <app-topbar
+      [hasUnreadNotifications]="true"
+      (sidebarToggle)="toggleSidebar()"
+      (mobileMenuOpen)="openMobileSidebar()"
+      (notificationsToggle)="toggleNotifications()"
+    ></app-topbar>
+
+    <section class="content" aria-label="Main content">
+      <router-outlet />
+    </section>
+  </main>
+</div>

@@ -1,0 +1,160 @@
+:host {
+  display: block;
+}
+
+.topbar {
+  background: var(--surface);
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text);
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+  height: var(--topbar-h);
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbar-left {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  min-width: 0;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.breadcrumb {
+  color: var(--text3);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.search-wrap {
+  align-items: center;
+  background: var(--bg);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: text;
+  display: flex;
+  gap: 8px;
+  min-width: 220px;
+  padding: 7px 12px;
+  transition: border-color 0.15s;
+}
+
+.search-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.search-wrap input {
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  font-size: 13px;
+  outline: 0;
+  width: 100%;
+}
+
+.search-wrap input::placeholder,
+.search-wrap mat-icon {
+  color: var(--text3);
+}
+
+.search-wrap mat-icon {
+  flex-shrink: 0;
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.kbd {
+  background: var(--border);
+  border-radius: 4px;
+  color: var(--text3);
+  font-size: 10px;
+  padding: 1px 4px;
+}
+
+.topbar-actions {
+  align-items: center;
+  display: flex;
+  gap: 4px;
+}
+
+.icon-btn,
+.mobile-toggle {
+  color: var(--text2);
+  position: relative;
+}
+
+.icon-btn:hover,
+.mobile-toggle:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.mobile-toggle {
+  display: none;
+}
+
+.notif-dot {
+  background: var(--red);
+  border: 1.5px solid var(--surface);
+  border-radius: 50%;
+  height: 7px;
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  width: 7px;
+}
+
+.divider-v {
+  background: var(--border);
+  height: 20px;
+  margin: 0 4px;
+  width: 0.5px;
+}
+
+.avatar-button {
+  border-radius: var(--radius-md);
+  min-width: auto;
+  padding: 2px;
+}
+
+.avatar {
+  align-items: center;
+  background: var(--accent-light);
+  border-radius: 50%;
+  color: var(--accent-text);
+  display: flex;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+@media (max-width: 700px) {
+  .mobile-toggle {
+    display: inline-flex;
+  }
+
+  .desktop-toggle,
+  .search-wrap {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 12px;
+  }
+}

@@ -1,0 +1,43 @@
+<div
+  class="notif-overlay"
+  [class.show]="isOpen"
+  (click)="closed.emit()"
+  aria-hidden="true"
+></div>
+
+<aside class="notif-panel" [class.show]="isOpen" aria-label="Notifications">
+  <header class="notif-head">
+    <span class="notif-title">Notifications</span>
+    <div class="notif-actions">
+      <button class="text-action" type="button" (click)="markAllRead()">Mark all read</button>
+      <button mat-icon-button type="button" aria-label="Close notifications" (click)="closed.emit()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </header>
+
+  @for (notification of notifications; track notification.text) {
+    <button class="notif-item" [class.unread]="notification.unread" type="button">
+      <span
+        class="notif-icon"
+        [class.red]="notification.tone === 'red'"
+        [class.blue]="notification.tone === 'blue'"
+        [class.amber]="notification.tone === 'amber'"
+        [class.green]="notification.tone === 'green'"
+      >
+        <mat-icon aria-hidden="true">{{ notification.icon }}</mat-icon>
+      </span>
+      <span class="notif-content">
+        <span class="notif-text">{{ notification.text }}</span>
+        <span class="notif-time">{{ notification.time }}</span>
+      </span>
+      @if (notification.unread) {
+        <span class="unread-dot" aria-hidden="true"></span>
+      }
+    </button>
+  }
+
+  <div class="notif-footer">
+    <a>View all notifications</a>
+  </div>
+</aside>
