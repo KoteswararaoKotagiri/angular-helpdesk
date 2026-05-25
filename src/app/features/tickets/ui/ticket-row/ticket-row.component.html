@@ -1,0 +1,49 @@
+<article class="ticket-row" [class.ticket-row--unread]="ticket.unread" [class.ticket-row--selected]="ticket.selected" tabindex="0">
+  <div class="ticket-row__select">
+    <mat-checkbox [checked]="ticket.selected" aria-label="Select ticket"></mat-checkbox>
+  </div>
+
+  <div class="ticket-row__ticket">
+    <div class="ticket-row__title">
+      <span class="ticket-row__id">{{ ticket.id }}</span>
+      <strong>{{ ticket.title }}</strong>
+      <span class="unread-dot" *ngIf="ticket.unread" matTooltip="Unread updates"></span>
+    </div>
+    <p>{{ ticket.summary }}</p>
+    <div class="ticket-row__meta">
+      <span>{{ ticket.requester }}</span>
+      <span>{{ ticket.created }}</span>
+      <span><mat-icon>chat_bubble</mat-icon>{{ ticket.comments }}</span>
+      <span><mat-icon>attach_file</mat-icon>{{ ticket.attachments }}</span>
+    </div>
+  </div>
+
+  <app-priority-chip [label]="ticket.priority" [tone]="ticket.priorityTone" />
+  <app-status-chip [label]="ticket.status" [tone]="ticket.statusTone" />
+
+  <div class="ticket-row__person">
+    <span>{{ ticket.assigneeInitials }}</span>
+    <div>
+      <strong>{{ ticket.assignee }}</strong>
+      <small>{{ ticket.department }}</small>
+    </div>
+  </div>
+
+  <div class="ticket-row__sla" [ngClass]="'tone-' + ticket.slaTone">
+    <div>
+      <strong>{{ ticket.slaLabel }}</strong>
+      <small>{{ ticket.updated }}</small>
+    </div>
+    <mat-progress-bar mode="determinate" [value]="ticket.slaPercent"></mat-progress-bar>
+  </div>
+
+  <div class="ticket-row__activity" [ngClass]="'activity-' + ticket.activity">
+    <span></span>
+    {{ ticket.activity }}
+  </div>
+
+  <div class="ticket-row__actions">
+    <button mat-icon-button type="button" matTooltip="Open details"><mat-icon>open_in_new</mat-icon></button>
+    <app-quick-actions-menu />
+  </div>
+</article>

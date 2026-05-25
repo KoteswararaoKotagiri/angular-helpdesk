@@ -1,0 +1,15 @@
+<section class="ticket-table" aria-label="Enterprise ticket table">
+  <div class="ticket-table__header">
+    <div><mat-checkbox aria-label="Select all tickets"></mat-checkbox></div>
+    <button type="button">Ticket <mat-icon>swap_vert</mat-icon></button>
+    <button type="button">Priority <mat-icon>arrow_downward</mat-icon></button>
+    <button type="button">Status <mat-icon>swap_vert</mat-icon></button>
+    <button type="button">Owner <mat-icon>swap_vert</mat-icon></button>
+    <button type="button">SLA <mat-icon>arrow_downward</mat-icon></button>
+    <button type="button">Activity <mat-icon>swap_vert</mat-icon></button>
+    <span></span>
+  </div>
+  <div class="ticket-table__body">
+    <app-ticket-row *ngFor="let ticket of tickets" [ticket]="ticket" />
+  </div>
+</section>

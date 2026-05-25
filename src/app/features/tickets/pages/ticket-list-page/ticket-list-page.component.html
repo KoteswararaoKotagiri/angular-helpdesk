@@ -1,0 +1,17 @@
+<section class="ticket-list-page">
+  <app-ticket-toolbar [metrics]="metrics" />
+  <app-filter-bar [filters]="filters" />
+  <app-bulk-actions [selectedCount]="selectedCount" />
+
+  <ng-container *ngIf="!isLoading; else loading">
+    <app-ticket-empty-state *ngIf="showEmptyState; else ticketTable" />
+    <ng-template #ticketTable>
+      <app-ticket-table [tickets]="tickets" />
+      <app-pagination-bar label="Showing 1-8 of 47 tickets" />
+    </ng-template>
+  </ng-container>
+
+  <ng-template #loading>
+    <app-ticket-loading-state [rows]="7" />
+  </ng-template>
+</section>

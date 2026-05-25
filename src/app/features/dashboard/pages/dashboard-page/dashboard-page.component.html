@@ -16,7 +16,7 @@
   </div>
 
   <div class="dashboard-grid dashboard-grid--operations">
-    <app-dashboard-card title="Ticket summary" eyebrow="Current queue" actionLabel="View all" actionIcon="arrow_forward" flush>
+    <app-dashboard-card title="Ticket summary" eyebrow="Current queue" actionLabel="View all" actionIcon="arrow_forward" [flush]="true">
       <div class="ticket-table" role="table" aria-label="Recent tickets">
         <div class="ticket-table__head" role="row">
           <span>Ticket</span>

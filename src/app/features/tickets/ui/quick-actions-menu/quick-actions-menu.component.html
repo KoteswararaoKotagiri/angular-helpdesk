@@ -1,0 +1,10 @@
+<button mat-icon-button type="button" matTooltip="Ticket actions" [matMenuTriggerFor]="menu">
+  <mat-icon>more_vert</mat-icon>
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>open_in_new</mat-icon><span>Open details</span></button>
+  <button mat-menu-item type="button"><mat-icon>person_add</mat-icon><span>Assign</span></button>
+  <button mat-menu-item type="button"><mat-icon>chat_bubble</mat-icon><span>Add comment</span></button>
+  <button mat-menu-item type="button"><mat-icon>low_priority</mat-icon><span>Change priority</span></button>
+  <button mat-menu-item type="button"><mat-icon>task_alt</mat-icon><span>Close ticket</span></button>
+</mat-menu>

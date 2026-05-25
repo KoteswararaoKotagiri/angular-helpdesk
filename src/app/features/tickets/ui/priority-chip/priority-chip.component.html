@@ -1,0 +1,4 @@
+<span class="priority" [ngClass]="'tone-' + tone">
+  <mat-icon>{{ tone === 'red' ? 'local_fire_department' : tone === 'amber' ? 'keyboard_double_arrow_up' : 'flag' }}</mat-icon>
+  {{ label }}
+</span>
