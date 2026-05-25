@@ -1,0 +1,54 @@
+<header class="ticket-header">
+  <div class="ticket-header__crumbs">
+    <a routerLink="/tickets">Tickets</a>
+    <mat-icon>chevron_right</mat-icon>
+    <span>{{ ticket.id }}</span>
+  </div>
+
+  <div class="ticket-header__main">
+    <div class="ticket-header__title">
+      <div class="ticket-header__badges">
+        <span class="ticket-header__id">{{ ticket.id }}</span>
+        <app-status-chip [label]="ticket.status" [tone]="ticket.statusTone" />
+        <app-priority-chip [label]="ticket.priority" [tone]="ticket.priorityTone" />
+      </div>
+      <h1>{{ ticket.title }}</h1>
+      <div class="ticket-header__subline">
+        <span>Requested by {{ ticket.requester.name }}</span>
+        <span>Updated {{ ticket.updatedAt }}</span>
+        <span class="ticket-header__sla"><mat-icon>timer</mat-icon>{{ ticket.slaLabel }}</span>
+      </div>
+    </div>
+
+    <div class="ticket-header__actions">
+      <app-realtime-indicator detail="Rahul, Anita, and Priya are viewing this ticket" />
+      <button mat-stroked-button type="button"><mat-icon>person_add</mat-icon>Assign</button>
+      <button mat-flat-button color="primary" type="button"><mat-icon>reply</mat-icon>Reply</button>
+      <button mat-icon-button type="button" [matMenuTriggerFor]="moreMenu" matTooltip="More actions">
+        <mat-icon>more_horiz</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div class="ticket-header__people" aria-label="Active collaborators">
+    <div class="person person--assignee">
+      <span class="avatar" [class.avatar--online]="ticket.assignee.online">{{ ticket.assignee.initials }}</span>
+      <div>
+        <small>Assignee</small>
+        <strong>{{ ticket.assignee.name }}</strong>
+      </div>
+    </div>
+    <div class="collaborators">
+      <span *ngFor="let collaborator of ticket.collaborators" class="avatar" [class.avatar--online]="collaborator.online" [matTooltip]="collaborator.name">
+        {{ collaborator.initials }}
+      </span>
+      <span class="typing"><span></span>Anita is typing</span>
+    </div>
+  </div>
+</header>
+
+<mat-menu #moreMenu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>flag</mat-icon><span>Escalate</span></button>
+  <button mat-menu-item type="button"><mat-icon>schedule</mat-icon><span>Snooze</span></button>
+  <button mat-menu-item type="button"><mat-icon>check_circle</mat-icon><span>Close ticket</span></button>
+</mat-menu>

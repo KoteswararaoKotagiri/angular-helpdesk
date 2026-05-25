@@ -1,0 +1,14 @@
+<section class="sla" [ngClass]="'tone-' + tone">
+  <div class="sla__top">
+    <div>
+      <span>SLA health</span>
+      <strong>{{ label }}</strong>
+    </div>
+    <mat-icon>timer</mat-icon>
+  </div>
+  <mat-progress-bar mode="determinate" [value]="percent"></mat-progress-bar>
+  <div class="sla__grid">
+    <span>First response <strong>{{ firstResponseDue }}</strong></span>
+    <span>Resolution <strong>{{ resolutionDue }}</strong></span>
+  </div>
+</section>

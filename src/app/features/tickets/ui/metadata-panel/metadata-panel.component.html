@@ -1,0 +1,60 @@
+<aside class="metadata" aria-label="Ticket metadata">
+  <app-ticket-sla-widget
+    [label]="ticket.slaLabel"
+    [percent]="ticket.slaPercent"
+    [firstResponseDue]="ticket.firstResponseDue"
+    [resolutionDue]="ticket.resolutionDue"
+    [tone]="ticket.slaTone"
+  />
+
+  <section class="metadata__section">
+    <header>
+      <h2>Properties</h2>
+      <button mat-icon-button type="button"><mat-icon>edit</mat-icon></button>
+    </header>
+    <dl>
+      <div>
+        <dt>Status</dt>
+        <dd><app-status-chip [label]="ticket.status" [tone]="ticket.statusTone" /></dd>
+      </div>
+      <div>
+        <dt>Priority</dt>
+        <dd><app-priority-chip [label]="ticket.priority" [tone]="ticket.priorityTone" /></dd>
+      </div>
+      <div>
+        <dt>Assignee</dt>
+        <dd class="person"><span>{{ ticket.assignee.initials }}</span>{{ ticket.assignee.name }}</dd>
+      </div>
+      <div>
+        <dt>Category</dt>
+        <dd>{{ ticket.category }}</dd>
+      </div>
+      <div>
+        <dt>Department</dt>
+        <dd>{{ ticket.department }}</dd>
+      </div>
+      <div>
+        <dt>Created</dt>
+        <dd>{{ ticket.createdAt }}</dd>
+      </div>
+      <div>
+        <dt>Updated</dt>
+        <dd>{{ ticket.updatedAt }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="metadata__section">
+    <header><h2>Watchers</h2><button mat-icon-button type="button"><mat-icon>person_add</mat-icon></button></header>
+    <div class="watchers">
+      <span *ngFor="let watcher of ticket.watchers" [class.online]="watcher.online">{{ watcher.initials }}</span>
+    </div>
+  </section>
+
+  <section class="metadata__section">
+    <header><h2>Tags</h2></header>
+    <mat-chip-set>
+      <mat-chip *ngFor="let tag of ticket.tags">{{ tag }}</mat-chip>
+    </mat-chip-set>
+  </section>
+</aside>

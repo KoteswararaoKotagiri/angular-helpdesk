@@ -1,0 +1,12 @@
+<section class="quick-actions" aria-label="Quick actions">
+  <header>
+    <span>Workflow</span>
+    <h2>Quick actions</h2>
+  </header>
+  <div class="quick-actions__grid">
+    <button *ngFor="let action of actions" type="button" [ngClass]="'tone-' + action.tone">
+      <mat-icon>{{ action.icon }}</mat-icon>
+      <span>{{ action.label }}</span>
+    </button>
+  </div>
+</section>

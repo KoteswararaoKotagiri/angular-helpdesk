@@ -1,0 +1,26 @@
+<section class="ticket-details-page">
+  <app-ticket-header [ticket]="ticket" />
+
+  <div class="workspace">
+    <main class="workspace__main">
+      <app-quick-actions-panel />
+      <mat-tab-group class="workspace__tabs" animationDuration="180ms">
+        <mat-tab label="Conversation">
+          <app-conversation-thread [items]="ticket.conversation" />
+        </mat-tab>
+        <mat-tab label="Activity">
+          <app-activity-timeline [items]="ticket.timeline" />
+        </mat-tab>
+        <mat-tab label="Attachments">
+          <app-attachment-panel [attachments]="ticket.attachments" />
+        </mat-tab>
+      </mat-tab-group>
+    </main>
+
+    <aside class="workspace__side">
+      <app-metadata-panel [ticket]="ticket" />
+      <app-attachment-panel [attachments]="ticket.attachments" />
+      <app-activity-timeline [items]="ticket.timeline" />
+    </aside>
+  </div>
+</section>

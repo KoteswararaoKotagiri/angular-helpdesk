@@ -1,0 +1,17 @@
+<article class="note">
+  <span class="avatar">{{ item.author.initials }}</span>
+  <div class="note__body">
+    <header>
+      <div>
+        <span><mat-icon>lock</mat-icon>Internal note</span>
+        <strong>{{ item.author.name }}</strong>
+      </div>
+      <small>{{ item.timestamp }}</small>
+    </header>
+    <p>{{ item.body }}</p>
+    <footer>
+      <button mat-button type="button"><mat-icon>edit</mat-icon>Edit note</button>
+      <button mat-button type="button"><mat-icon>alternate_email</mat-icon>Mention</button>
+    </footer>
+  </div>
+</article>
