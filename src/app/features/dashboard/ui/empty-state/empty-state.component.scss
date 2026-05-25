@@ -1,0 +1,33 @@
+.empty-state {
+  align-items: center;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface2) 100%);
+  border: 0.5px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--text2);
+  display: flex;
+  flex-direction: column;
+  min-height: 184px;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+mat-icon {
+  color: var(--text3);
+  font-size: 30px;
+  height: 30px;
+  width: 30px;
+}
+
+h3 {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px 0 4px;
+}
+
+p {
+  font-size: 12.5px;
+  margin: 0 0 12px;
+  max-width: 320px;
+}

@@ -1,0 +1,14 @@
+<app-dashboard-card title="Quick actions" eyebrow="Productivity">
+  <div class="quick-actions">
+    <button type="button" class="quick-action" *ngFor="let action of actions" [ngClass]="'tone-' + (action.tone || 'neutral')">
+      <span>
+        <mat-icon>{{ action.icon }}</mat-icon>
+      </span>
+      <div>
+        <strong>{{ action.label }}</strong>
+        <small *ngIf="action.meta">{{ action.meta }}</small>
+      </div>
+      <mat-icon class="quick-action__arrow">chevron_right</mat-icon>
+    </button>
+  </div>
+</app-dashboard-card>

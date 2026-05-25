@@ -1,0 +1,17 @@
+.loading-state {
+  display: grid;
+  gap: 10px;
+}
+
+span {
+  animation: shimmer 1.35s linear infinite;
+  background: linear-gradient(90deg, var(--surface2) 0%, var(--bg) 42%, var(--surface2) 84%);
+  background-size: 240% 100%;
+  border-radius: var(--radius-md);
+  display: block;
+  height: 42px;
+}
+
+@keyframes shimmer {
+  to { background-position: -240% 0; }
+}

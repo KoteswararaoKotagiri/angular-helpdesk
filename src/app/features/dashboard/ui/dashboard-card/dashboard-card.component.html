@@ -1,0 +1,14 @@
+<section class="dashboard-card" [class.dashboard-card--flush]="flush">
+  <header class="dashboard-card__header" *ngIf="title || actionLabel">
+    <div>
+      <span class="dashboard-card__eyebrow" *ngIf="eyebrow">{{ eyebrow }}</span>
+      <h2>{{ title }}</h2>
+    </div>
+    <button mat-button class="dashboard-card__action" *ngIf="actionLabel" type="button">
+      {{ actionLabel }}
+      <mat-icon>{{ actionIcon }}</mat-icon>
+    </button>
+  </header>
+
+  <ng-content></ng-content>
+</section>

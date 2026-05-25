@@ -1,0 +1,73 @@
+<section class="dashboard-page">
+  <app-dashboard-header
+    title="Good morning, Koteswar"
+    [subtitle]="'Here is what is happening with your helpdesk today - ' + todayLabel"
+    [filters]="filters"
+  />
+
+  <div class="stats-grid" aria-label="Dashboard statistics">
+    <app-stat-card *ngFor="let stat of stats" [stat]="stat" />
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--main">
+    <app-chart-widget class="span-2" [widget]="charts[0]" />
+    <app-chart-widget [widget]="charts[1]" />
+    <app-quick-actions [actions]="quickActions" />
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--operations">
+    <app-dashboard-card title="Ticket summary" eyebrow="Current queue" actionLabel="View all" actionIcon="arrow_forward" flush>
+      <div class="ticket-table" role="table" aria-label="Recent tickets">
+        <div class="ticket-table__head" role="row">
+          <span>Ticket</span>
+          <span>Priority</span>
+          <span>Status</span>
+          <span>Owner</span>
+          <span>SLA</span>
+        </div>
+        <div class="ticket-table__row" role="row" *ngFor="let ticket of tickets">
+          <span>
+            <strong>{{ ticket.id }}</strong>
+            {{ ticket.title }}
+          </span>
+          <em [ngClass]="'tone-' + ticket.priorityTone">{{ ticket.priority }}</em>
+          <em [ngClass]="'tone-' + ticket.statusTone">{{ ticket.status }}</em>
+          <span>{{ ticket.assignee }}</span>
+          <b [ngClass]="'tone-text-' + ticket.slaTone">{{ ticket.sla }}</b>
+        </div>
+      </div>
+    </app-dashboard-card>
+
+    <app-activity-feed [activities]="activities" />
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--supporting">
+    <app-chart-widget [widget]="charts[2]" />
+    <app-sla-widget [items]="slaItems" />
+    <app-notification-widget [notifications]="notifications" />
+  </div>
+
+  <div class="dashboard-grid dashboard-grid--states">
+    <app-dashboard-card title="Empty state pattern" eyebrow="Future integration">
+      <app-dashboard-empty-state
+        icon="inbox"
+        title="No escalations in this view"
+        message="When filters return no matching tickets, the dashboard keeps the workflow calm and recoverable."
+        actionLabel="Reset filters"
+      />
+    </app-dashboard-card>
+
+    <app-dashboard-card title="Loading state pattern" eyebrow="Skeleton preview">
+      <app-dashboard-loading-state *ngIf="isLoadingPreview; else readyState" [rows]="4" />
+      <ng-template #readyState>
+        <div class="ready-state">
+          <mat-icon>task_alt</mat-icon>
+          <div>
+            <strong>Dashboard widgets are ready</strong>
+            <span>Skeleton components are available for API-backed loading states.</span>
+          </div>
+        </div>
+      </ng-template>
+    </app-dashboard-card>
+  </div>
+</section>

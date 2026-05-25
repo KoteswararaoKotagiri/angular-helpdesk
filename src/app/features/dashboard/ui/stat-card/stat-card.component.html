@@ -1,0 +1,16 @@
+<article class="stat-card" [ngClass]="'tone-' + stat.tone" tabindex="0">
+  <div class="stat-card__topline">
+    <span class="stat-card__icon">
+      <mat-icon>{{ stat.icon }}</mat-icon>
+    </span>
+    <span class="stat-card__meta" *ngIf="stat.meta">{{ stat.meta }}</span>
+  </div>
+
+  <p>{{ stat.label }}</p>
+  <strong>{{ stat.value }}</strong>
+
+  <div class="stat-card__change" [ngClass]="'change-' + stat.changeDirection">
+    <mat-icon>{{ stat.changeDirection === 'down' ? 'trending_down' : stat.changeDirection === 'up' ? 'trending_up' : 'remove' }}</mat-icon>
+    <span>{{ stat.change }}</span>
+  </div>
+</article>

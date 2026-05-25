@@ -1,0 +1,98 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.activity-feed__status {
+  align-items: center;
+  color: var(--green);
+  display: inline-flex;
+  float: right;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 6px;
+  margin-top: -44px;
+}
+
+.activity-feed__status span {
+  animation: pulse 1.7s infinite;
+  background: var(--green);
+  border-radius: 50%;
+  height: 7px;
+  width: 7px;
+}
+
+.activity-feed {
+  display: grid;
+}
+
+.activity-item {
+  border-bottom: 0.5px solid var(--border);
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  padding: 11px 0;
+}
+
+.activity-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.activity-item__icon {
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.activity-item__icon mat-icon {
+  font-size: 15px;
+  height: 15px;
+  width: 15px;
+}
+
+.activity-item__body {
+  min-width: 0;
+}
+
+p {
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+time {
+  color: var(--text3);
+  display: block;
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.tone-blue .activity-item__icon { background: var(--blue-bg); color: var(--blue-text); }
+.tone-green .activity-item__icon { background: var(--green-bg); color: var(--green-text); }
+.tone-amber .activity-item__icon { background: var(--amber-bg); color: var(--amber-text); }
+.tone-red .activity-item__icon { background: var(--red-bg); color: var(--red-text); }
+.tone-purple .activity-item__icon,
+.tone-accent .activity-item__icon { background: var(--accent-light); color: var(--accent-text); }
+.tone-neutral .activity-item__icon { background: var(--surface2); color: var(--text2); }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(59, 109, 17, 0.35); }
+  70% { box-shadow: 0 0 0 7px rgba(59, 109, 17, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(59, 109, 17, 0); }
+}

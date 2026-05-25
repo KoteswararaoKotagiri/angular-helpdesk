@@ -1,0 +1,15 @@
+<app-dashboard-card title="Notifications" eyebrow="Realtime inbox" actionLabel="Mark read" actionIcon="done_all">
+  <div class="notifications">
+    <article class="notification" *ngFor="let notification of notifications" [class.notification--unread]="notification.unread" [ngClass]="'tone-' + notification.tone">
+      <span class="notification__icon">
+        <mat-icon>{{ notification.icon }}</mat-icon>
+      </span>
+      <div>
+        <strong>{{ notification.title }}</strong>
+        <p>{{ notification.description }}</p>
+        <time>{{ notification.time }}</time>
+      </div>
+      <span class="notification__dot" *ngIf="notification.unread"></span>
+    </article>
+  </div>
+</app-dashboard-card>

@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.quick-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.quick-action {
+  align-items: center;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 34px 1fr 18px;
+  min-height: 54px;
+  padding: 9px 10px;
+  text-align: left;
+  transition: background 0.14s ease, border-color 0.14s ease, transform 0.14s ease;
+  width: 100%;
+}
+
+.quick-action:hover,
+.quick-action:focus-visible {
+  background: var(--surface2);
+  border-color: var(--border-strong);
+  transform: translateX(1px);
+}
+
+.quick-action > span {
+  align-items: center;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.quick-action mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+strong,
+small {
+  display: block;
+}
+
+strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+small {
+  color: var(--text3);
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.quick-action__arrow {
+  color: var(--text3);
+}
+
+.tone-blue > span { background: var(--blue-bg); color: var(--blue-text); }
+.tone-green > span { background: var(--green-bg); color: var(--green-text); }
+.tone-amber > span { background: var(--amber-bg); color: var(--amber-text); }
+.tone-red > span { background: var(--red-bg); color: var(--red-text); }
+.tone-purple > span,
+.tone-accent > span { background: var(--accent-light); color: var(--accent-text); }
+.tone-neutral > span { background: var(--surface2); color: var(--text2); }

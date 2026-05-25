@@ -1,0 +1,14 @@
+<app-dashboard-card title="SLA performance" eyebrow="Priority compliance">
+  <div class="sla-list">
+    <div class="sla-row" *ngFor="let item of items" [ngClass]="'tone-' + item.tone">
+      <div class="sla-row__label">
+        <strong>{{ item.label }}</strong>
+        <span>{{ item.meta }}</span>
+      </div>
+      <div class="sla-row__meter">
+        <mat-progress-bar mode="determinate" [value]="item.percent"></mat-progress-bar>
+      </div>
+      <span class="sla-row__percent">{{ item.percent }}%</span>
+    </div>
+  </div>
+</app-dashboard-card>

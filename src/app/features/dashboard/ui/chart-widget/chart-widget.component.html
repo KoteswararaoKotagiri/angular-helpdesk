@@ -1,0 +1,44 @@
+<app-dashboard-card [title]="widget.title" [eyebrow]="widget.subtitle || ''" [actionLabel]="widget.actionLabel || ''">
+  <div class="chart-widget" [ngClass]="'chart-widget--' + widget.type">
+    <ng-container [ngSwitch]="widget.type">
+      <div class="bar-chart" *ngSwitchCase="'bar'">
+        <div class="bar-chart__col" *ngFor="let item of widget.series">
+          <span class="bar-chart__value">{{ item.value }}</span>
+          <span class="bar-chart__bar" [ngClass]="toneClass(item.tone)" [style.height.px]="barHeight(item.value)"></span>
+          <span class="bar-chart__label">{{ item.label }}</span>
+        </div>
+      </div>
+
+      <div class="donut-chart" *ngSwitchCase="'donut'">
+        <div class="donut-chart__visual" aria-hidden="true">
+          <div class="donut-chart__center">
+            <strong>{{ total() }}</strong>
+            <span>tickets</span>
+          </div>
+        </div>
+        <div class="legend">
+          <div class="legend__item" *ngFor="let item of widget.series">
+            <span class="legend__dot" [ngClass]="toneClass(item.tone)"></span>
+            <span>{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+            <em>{{ percent(item.value) }}%</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="line-chart" *ngSwitchDefault>
+        <div class="line-chart__grid">
+          <span *ngFor="let item of widget.series" [style.height.%]="lineHeight(item.value)"></span>
+        </div>
+        <div class="line-chart__labels">
+          <span *ngFor="let item of widget.series">{{ item.label }}</span>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="chart-widget__insight" *ngIf="widget.insight">
+      <mat-icon>auto_awesome</mat-icon>
+      <span>{{ widget.insight }}</span>
+    </div>
+  </div>
+</app-dashboard-card>

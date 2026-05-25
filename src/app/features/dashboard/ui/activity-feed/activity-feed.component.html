@@ -1,0 +1,22 @@
+<app-dashboard-card title="Live activity" eyebrow="Collaboration stream">
+  <div class="activity-feed__status">
+    <span></span>
+    Live
+  </div>
+
+  <div class="activity-feed">
+    <article class="activity-item" *ngFor="let activity of activities" [ngClass]="'tone-' + activity.tone">
+      <span class="activity-item__icon">
+        <mat-icon>{{ activity.icon }}</mat-icon>
+      </span>
+      <div class="activity-item__body">
+        <p>
+          <strong *ngIf="activity.actor">{{ activity.actor }}</strong>
+          {{ activity.text }}
+          <a *ngIf="activity.ticket">{{ activity.ticket }}</a>
+        </p>
+        <time>{{ activity.time }}</time>
+      </div>
+    </article>
+  </div>
+</app-dashboard-card>

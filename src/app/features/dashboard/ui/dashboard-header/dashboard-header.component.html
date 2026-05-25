@@ -1,0 +1,45 @@
+<header class="dashboard-header">
+  <div class="dashboard-header__intro">
+    <span class="dashboard-header__eyebrow">
+      <span></span>
+      Operations command center
+    </span>
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </div>
+
+  <div class="dashboard-header__tools">
+    <label class="dashboard-search">
+      <mat-icon>search</mat-icon>
+      <input type="search" placeholder="Search tickets, users, activity" />
+      <kbd>Ctrl K</kbd>
+    </label>
+
+    <button mat-icon-button matTooltip="Productivity shortcuts" [matMenuTriggerFor]="shortcutsMenu" type="button">
+      <mat-icon>bolt</mat-icon>
+    </button>
+    <mat-menu #shortcutsMenu="matMenu">
+      <button mat-menu-item type="button"><mat-icon>assignment_add</mat-icon><span>Create ticket</span></button>
+      <button mat-menu-item type="button"><mat-icon>person_add</mat-icon><span>Assign queue</span></button>
+      <button mat-menu-item type="button"><mat-icon>query_stats</mat-icon><span>Open reports</span></button>
+    </mat-menu>
+
+    <button mat-icon-button matTooltip="Notifications" type="button" class="dashboard-header__bell">
+      <mat-icon>notifications</mat-icon>
+      <span></span>
+    </button>
+
+    <button mat-flat-button color="primary" type="button" class="dashboard-header__primary">
+      <mat-icon>add</mat-icon>
+      New ticket
+    </button>
+  </div>
+</header>
+
+<nav class="dashboard-filters" aria-label="Dashboard filters">
+  <button type="button" *ngFor="let filter of filters" [class.active]="filter.active">
+    <mat-icon *ngIf="filter.icon">{{ filter.icon }}</mat-icon>
+    <span>{{ filter.label }}</span>
+    <strong *ngIf="filter.count !== undefined">{{ filter.count }}</strong>
+  </button>
+</nav>
