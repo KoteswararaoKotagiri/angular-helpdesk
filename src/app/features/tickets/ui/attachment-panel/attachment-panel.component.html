@@ -3,22 +3,12 @@
     <div>
       <span>Files</span>
       <h2>Attachments</h2>
+      <p>{{ attachments.length }} files shared in this ticket</p>
     </div>
     <button mat-icon-button type="button" matTooltip="Upload file"><mat-icon>add</mat-icon></button>
   </header>
-  <button class="dropzone" type="button">
-    <mat-icon>cloud_upload</mat-icon>
-    <span>Drop files or browse</span>
-    <small>Screenshots, logs, PDFs up to 25 MB</small>
-  </button>
+  <app-upload-zone />
   <div class="attachments__list">
-    <article *ngFor="let attachment of attachments">
-      <mat-icon>{{ attachment.icon }}</mat-icon>
-      <div>
-        <strong>{{ attachment.name }}</strong>
-        <small>{{ attachment.type }} &middot; {{ attachment.size }} &middot; {{ attachment.addedAt }}</small>
-      </div>
-      <button mat-icon-button type="button" matTooltip="Download"><mat-icon>download</mat-icon></button>
-    </article>
+    <app-attachment-card *ngFor="let attachment of attachments" [attachment]="attachment" />
   </div>
 </section>

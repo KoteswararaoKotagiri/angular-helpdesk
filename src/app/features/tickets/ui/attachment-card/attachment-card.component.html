@@ -1,0 +1,19 @@
+<article class="attachment" [class.attachment--compact]="compact">
+  <app-file-preview [attachment]="attachment" />
+  <div class="attachment__meta">
+    <strong>{{ attachment.name }}</strong>
+    <span>{{ attachment.type }} &middot; {{ attachment.size }} &middot; {{ attachment.addedAt }}</span>
+    <small *ngIf="attachment.summary">{{ attachment.summary }}</small>
+    <mat-progress-bar *ngIf="attachment.status === 'uploading'" mode="determinate" [value]="attachment.progress ?? 0" />
+  </div>
+  <div class="attachment__actions">
+    <button mat-icon-button type="button" matTooltip="Preview file"><mat-icon>visibility</mat-icon></button>
+    <button mat-icon-button type="button" matTooltip="More file actions" [matMenuTriggerFor]="fileMenu"><mat-icon>more_horiz</mat-icon></button>
+  </div>
+</article>
+
+<mat-menu #fileMenu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>download</mat-icon><span>Download</span></button>
+  <button mat-menu-item type="button"><mat-icon>link</mat-icon><span>Copy link</span></button>
+  <button mat-menu-item type="button"><mat-icon>push_pin</mat-icon><span>Pin to ticket</span></button>
+</mat-menu>

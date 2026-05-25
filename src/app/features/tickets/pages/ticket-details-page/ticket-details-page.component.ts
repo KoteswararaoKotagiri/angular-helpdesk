@@ -52,9 +52,10 @@ export class TicketDetailsPageComponent {
     ],
     tags: ['production', 'auth-service', 'sla-risk', 'finance-impact'],
     attachments: [
-      { name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago' },
-      { name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago' },
-      { name: 'incident-runbook.pdf', type: 'PDF', size: '860 KB', icon: 'picture_as_pdf', addedBy: 'Anita M.', addedAt: '24 min ago' }
+      { name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago', previewKind: 'log', status: 'ready', summary: 'Gateway 503 spike around MFA callback.' },
+      { name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago', previewKind: 'image', status: 'ready', summary: 'User-facing 503 error after MFA.' },
+      { name: 'incident-runbook.pdf', type: 'PDF', size: '860 KB', icon: 'picture_as_pdf', addedBy: 'Anita M.', addedAt: '24 min ago', previewKind: 'pdf', status: 'ready', summary: 'Rollback and gateway mitigation steps.' },
+      { name: 'auth-mitigation-plan.xlsx', type: 'XLSX', size: '312 KB', icon: 'table_chart', addedBy: 'Priya S.', addedAt: 'Uploading', previewKind: 'spreadsheet', status: 'uploading', progress: 68, summary: 'Impact tracker and owner checklist.' }
     ],
     conversation: [
       {
@@ -64,7 +65,9 @@ export class TicketDetailsPageComponent {
         timestamp: 'Today, 9:12 AM',
         body: 'The finance team is unable to sign in. We are seeing intermittent 503 errors after entering MFA. Month-end approvals are blocked for about 40 users.',
         status: 'Customer reply',
-        attachments: [{ name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago' }]
+        attachments: [{ name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago', previewKind: 'image', status: 'ready' }],
+        reactions: ['Seen by support'],
+        unread: true
       },
       {
         id: 'c2',
@@ -72,14 +75,27 @@ export class TicketDetailsPageComponent {
         author: { name: 'Rahul K.', initials: 'RK', role: 'engineer', title: 'L2 Support Engineer', online: true },
         timestamp: 'Today, 9:19 AM',
         body: 'Thanks for the details. We can reproduce the 503 from the auth gateway and have moved this to critical priority. We are checking the deployment health and will keep this thread updated every 15 minutes.',
-        status: 'Engineer reply'
+        status: 'Engineer reply',
+        edited: true,
+        replyCount: 2,
+        mentions: ['@Anita']
       },
       {
         id: 'c3',
         type: 'internal',
         author: { name: 'Anita M.', initials: 'AM', role: 'engineer', title: 'Incident Commander', online: true },
         timestamp: 'Today, 9:23 AM',
-        body: 'Internal: rollback candidate is v2.18.4. Vijay is checking gateway saturation first so we do not rollback unnecessarily. Keep customer updates concise and avoid ETA until confirmed.'
+        body: 'Internal: rollback candidate is v2.18.4. Vijay is checking gateway saturation first so we do not rollback unnecessarily. Keep customer updates concise and avoid ETA until confirmed.',
+        mentions: ['@Vijay', '@Rahul'],
+        replyCount: 1
+      },
+      {
+        id: 'c5',
+        type: 'activity',
+        author: { name: 'System', initials: 'SY', role: 'system', title: 'Automation' },
+        timestamp: 'Today, 9:27 AM',
+        body: 'Priority changed to Critical and incident channel created.',
+        status: 'Workflow activity'
       },
       {
         id: 'c4',
@@ -88,7 +104,9 @@ export class TicketDetailsPageComponent {
         timestamp: 'Today, 9:31 AM',
         body: 'We found elevated latency in the authentication gateway and are applying a mitigation now. Users may see sign-in succeed after retrying once. We will confirm when the service is fully stable.',
         status: 'Pinned update',
-        attachments: [{ name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago' }]
+        attachments: [{ name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago', previewKind: 'log', status: 'ready' }],
+        reactions: ['Acknowledged', 'Pinned'],
+        unread: true
       }
     ],
     timeline: [

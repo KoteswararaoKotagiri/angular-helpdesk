@@ -1,21 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { ConversationItem } from '../../models/ticket-details.models';
 import { CommentCardComponent } from '../comment-card/comment-card.component';
+import { ConversationToolbarComponent } from '../conversation-toolbar/conversation-toolbar.component';
 import { InternalNoteCardComponent } from '../internal-note-card/internal-note-card.component';
+import { MessageComposerComponent } from '../message-composer/message-composer.component';
+import { TypingIndicatorComponent } from '../typing-indicator/typing-indicator.component';
 
 @Component({
   selector: 'app-conversation-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatButtonModule, MatButtonToggleModule, MatIconModule, MatTooltipModule, CommentCardComponent, InternalNoteCardComponent],
+  imports: [CommonModule, MatIconModule, CommentCardComponent, ConversationToolbarComponent, InternalNoteCardComponent, MessageComposerComponent, TypingIndicatorComponent],
   templateUrl: './conversation-thread.component.html',
   styleUrl: './conversation-thread.component.scss'
 })
 export class ConversationThreadComponent {
   @Input({ required: true }) items: ConversationItem[] = [];
+
+  get activeParticipants(): number {
+    return new Set(this.items.map((item) => item.author.name)).size;
+  }
 }

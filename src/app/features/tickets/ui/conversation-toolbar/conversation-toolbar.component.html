@@ -1,0 +1,26 @@
+<header class="toolbar">
+  <div>
+    <span class="toolbar__eyebrow">Collaboration</span>
+    <h2>Ticket conversation</h2>
+    <p>{{ count }} updates &middot; {{ participants }} active collaborators &middot; customer-visible history</p>
+  </div>
+
+  <div class="toolbar__actions">
+    <app-realtime-badge label="Live" detail="3 online" />
+    <button mat-icon-button type="button" matTooltip="Search conversation"><mat-icon>search</mat-icon></button>
+    <button mat-icon-button type="button" matTooltip="Filter updates" [matMenuTriggerFor]="filterMenu"><mat-icon>tune</mat-icon></button>
+    <button mat-icon-button type="button" matTooltip="More actions" [matMenuTriggerFor]="moreMenu"><mat-icon>more_horiz</mat-icon></button>
+  </div>
+</header>
+
+<mat-menu #filterMenu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>forum</mat-icon><span>All conversation</span></button>
+  <button mat-menu-item type="button"><mat-icon>lock</mat-icon><span>Internal notes</span></button>
+  <button mat-menu-item type="button"><mat-icon>attach_file</mat-icon><span>With attachments</span></button>
+</mat-menu>
+
+<mat-menu #moreMenu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>mark_email_unread</mat-icon><span>Mark unread</span></button>
+  <button mat-menu-item type="button"><mat-icon>push_pin</mat-icon><span>View pinned updates</span></button>
+  <button mat-menu-item type="button"><mat-icon>ios_share</mat-icon><span>Share thread</span></button>
+</mat-menu>

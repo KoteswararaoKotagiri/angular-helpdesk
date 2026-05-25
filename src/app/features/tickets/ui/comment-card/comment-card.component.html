@@ -1,4 +1,4 @@
-<article class="comment">
+<article class="comment" [class.comment--unread]="item.unread">
   <span class="avatar" [class.avatar--online]="item.author.online">{{ item.author.initials }}</span>
   <div class="comment__body">
     <header>
@@ -6,20 +6,33 @@
         <strong>{{ item.author.name }}</strong>
         <span>{{ item.author.title }}</span>
       </div>
-      <small>{{ item.timestamp }}</small>
+      <small>{{ item.timestamp }} <em *ngIf="item.edited">edited</em></small>
     </header>
     <p>{{ item.body }}</p>
+
+    <mat-chip-set *ngIf="item.mentions?.length" class="comment__mentions" aria-label="Mentions">
+      <mat-chip *ngFor="let mention of item.mentions ?? []">{{ mention }}</mat-chip>
+    </mat-chip-set>
+
     <div class="comment__attachments" *ngIf="item.attachments?.length">
-      <button *ngFor="let attachment of item.attachments ?? []" type="button" matTooltip="Preview attachment">
-        <mat-icon>{{ attachment.icon }}</mat-icon>
-        <span>{{ attachment.name }}</span>
-        <small>{{ attachment.size }}</small>
-      </button>
+      <app-attachment-card *ngFor="let attachment of item.attachments ?? []" [attachment]="attachment" [compact]="true" />
     </div>
+
+    <div class="comment__reactions" *ngIf="item.reactions?.length">
+      <button *ngFor="let reaction of item.reactions ?? []" type="button">{{ reaction }}</button>
+    </div>
+
     <footer>
       <span *ngIf="item.status">{{ item.status }}</span>
       <button mat-button type="button"><mat-icon>reply</mat-icon>Reply</button>
       <button mat-icon-button type="button" matTooltip="Add reaction"><mat-icon>add_reaction</mat-icon></button>
+      <button mat-icon-button type="button" matTooltip="More actions" [matMenuTriggerFor]="messageMenu"><mat-icon>more_horiz</mat-icon></button>
     </footer>
   </div>
 </article>
+
+<mat-menu #messageMenu="matMenu">
+  <button mat-menu-item type="button"><mat-icon>push_pin</mat-icon><span>Pin update</span></button>
+  <button mat-menu-item type="button"><mat-icon>link</mat-icon><span>Copy link</span></button>
+  <button mat-menu-item type="button"><mat-icon>turn_right</mat-icon><span>Start side thread</span></button>
+</mat-menu>

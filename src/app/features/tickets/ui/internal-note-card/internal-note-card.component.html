@@ -1,17 +1,23 @@
 <article class="note">
-  <span class="avatar">{{ item.author.initials }}</span>
+  <span class="avatar" [class.avatar--online]="item.author.online">{{ item.author.initials }}</span>
   <div class="note__body">
     <header>
       <div>
         <span><mat-icon>lock</mat-icon>Internal note</span>
         <strong>{{ item.author.name }}</strong>
+        <small>{{ item.author.title }}</small>
       </div>
       <small>{{ item.timestamp }}</small>
     </header>
     <p>{{ item.body }}</p>
+    <mat-chip-set *ngIf="item.mentions?.length" class="note__mentions" aria-label="Internal mentions">
+      <mat-chip *ngFor="let mention of item.mentions ?? []">{{ mention }}</mat-chip>
+    </mat-chip-set>
     <footer>
+      <span *ngIf="item.replyCount">{{ item.replyCount }} side reply</span>
       <button mat-button type="button"><mat-icon>edit</mat-icon>Edit note</button>
       <button mat-button type="button"><mat-icon>alternate_email</mat-icon>Mention</button>
+      <button mat-icon-button type="button" matTooltip="More note actions"><mat-icon>more_horiz</mat-icon></button>
     </footer>
   </div>
 </article>

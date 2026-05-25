@@ -1,7 +1,8 @@
 import { TicketTone } from './ticket-list.models';
 
 export type TicketParticipantRole = 'requester' | 'engineer' | 'system' | 'manager';
-export type ConversationItemType = 'public' | 'internal';
+export type ConversationItemType = 'public' | 'internal' | 'activity';
+export type AttachmentPreviewKind = 'image' | 'pdf' | 'document' | 'spreadsheet' | 'video' | 'log';
 export type TimelineTone = TicketTone | 'neutral';
 
 export interface TicketParticipant {
@@ -19,6 +20,10 @@ export interface TicketAttachment {
   icon: string;
   addedBy: string;
   addedAt: string;
+  previewKind?: AttachmentPreviewKind;
+  progress?: number;
+  status?: 'ready' | 'uploading' | 'scanning';
+  summary?: string;
 }
 
 export interface ConversationItem {
@@ -30,6 +35,10 @@ export interface ConversationItem {
   status?: string;
   attachments?: TicketAttachment[];
   reactions?: string[];
+  edited?: boolean;
+  unread?: boolean;
+  replyCount?: number;
+  mentions?: string[];
 }
 
 export interface TimelineItem {
