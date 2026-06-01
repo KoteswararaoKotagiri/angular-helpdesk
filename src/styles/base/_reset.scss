@@ -23,6 +23,7 @@ body {
   color: var(--text);
   line-height: 1.5;
   overflow: hidden;
+  transition: background-color 0.22s var(--ease-standard), color 0.22s var(--ease-standard);
 }
 
 a {
@@ -40,6 +41,17 @@ textarea {
 
 button {
   cursor: pointer;
+  min-height: 32px;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
+::selection {
+  background: var(--accent-light);
+  color: var(--accent-text);
 }
 
 ::-webkit-scrollbar {

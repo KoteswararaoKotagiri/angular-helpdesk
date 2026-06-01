@@ -1,0 +1,6 @@
+<section class="empty-state">
+  <div class="empty-state__icon"><mat-icon>{{ icon }}</mat-icon></div>
+  <h2>{{ title }}</h2>
+  <p>{{ message }}</p>
+  <button *ngIf="actionLabel" mat-stroked-button type="button">{{ actionLabel }}</button>
+</section>

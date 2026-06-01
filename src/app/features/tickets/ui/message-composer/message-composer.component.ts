@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -17,7 +17,18 @@ import { UploadZoneComponent } from '../upload-zone/upload-zone.component';
   styleUrl: './message-composer.component.scss'
 })
 export class MessageComposerComponent {
+  @Output() submitted = new EventEmitter<{ body: string; isInternal: boolean }>();
   mode: 'reply' | 'note' = 'reply';
   draft = '';
   readonly suggestedMentions = ['@Anita', '@Vijay', '@Priya'];
+
+  submit(): void {
+    const body = this.draft.trim();
+    if (!body) {
+      return;
+    }
+
+    this.submitted.emit({ body, isInternal: this.mode === 'note' });
+    this.draft = '';
+  }
 }

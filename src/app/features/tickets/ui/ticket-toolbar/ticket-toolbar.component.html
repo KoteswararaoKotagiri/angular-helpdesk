@@ -15,10 +15,10 @@
   <div class="ticket-toolbar__actions">
     <label class="ticket-search">
       <mat-icon>search</mat-icon>
-      <input type="search" placeholder="Search tickets, requesters, tags" />
+      <input type="search" placeholder="Search tickets, requesters, tags" [ngModel]="search" (ngModelChange)="searchChange.emit($event)" />
       <kbd>Ctrl K</kbd>
     </label>
-    <button mat-icon-button matTooltip="Refresh list" type="button"><mat-icon>refresh</mat-icon></button>
+    <button mat-icon-button matTooltip="Refresh list" type="button" (click)="refreshed.emit()"><mat-icon>refresh</mat-icon></button>
     <button mat-stroked-button type="button" [matMenuTriggerFor]="exportMenu"><mat-icon>download</mat-icon>Export</button>
     <mat-menu #exportMenu="matMenu">
       <button mat-menu-item type="button"><mat-icon>table_view</mat-icon><span>CSV export</span></button>

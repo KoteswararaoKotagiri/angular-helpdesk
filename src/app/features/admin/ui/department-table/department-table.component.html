@@ -1,0 +1,22 @@
+<section class="department-table" role="table" aria-label="Departments">
+  <div class="table-head" role="row">
+    <span>Department</span>
+    <span>Owner</span>
+    <span>Users</span>
+    <span>Engineers</span>
+    <span>Categories</span>
+    <span>SLA policy</span>
+    <span>Status</span>
+    <span></span>
+  </div>
+  <div class="table-row" role="row" *ngFor="let department of departments">
+    <span class="department-name"><mat-icon>business</mat-icon><strong>{{ department.name }}</strong></span>
+    <span>{{ department.owner }}</span>
+    <span>{{ department.users }}</span>
+    <span>{{ department.engineers }}</span>
+    <span>{{ department.categories }}</span>
+    <span>{{ department.sla }}</span>
+    <span><em [class.inactive]="department.status === 'Inactive'">{{ department.status }}</em></span>
+    <span><button mat-icon-button type="button" aria-label="Department actions"><mat-icon>more_horiz</mat-icon></button></span>
+  </div>
+</section>

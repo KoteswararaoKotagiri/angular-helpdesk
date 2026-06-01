@@ -1,0 +1,25 @@
+.loading-panel {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.loading-row {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 2fr 1fr 1fr 72px;
+  padding: 16px;
+}
+
+.loading-row + .loading-row {
+  border-top: 0.5px solid var(--border);
+}
+
+span {
+  animation: app-shimmer 1.35s linear infinite;
+  background: var(--skeleton);
+  background-size: 240% 100%;
+  border-radius: 999px;
+  height: 12px;
+}

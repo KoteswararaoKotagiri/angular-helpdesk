@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -16,4 +16,6 @@ import { UploadZoneComponent } from '../upload-zone/upload-zone.component';
 })
 export class AttachmentPanelComponent {
   @Input({ required: true }) attachments: TicketAttachment[] = [];
+  @Output() fileSelected = new EventEmitter<File>();
+  @Output() downloadRequested = new EventEmitter<TicketAttachment>();
 }

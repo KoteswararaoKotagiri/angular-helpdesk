@@ -6,20 +6,20 @@
       <app-quick-actions-panel />
       <mat-tab-group class="workspace__tabs" animationDuration="180ms">
         <mat-tab label="Conversation">
-          <app-conversation-thread [items]="ticket.conversation" />
+          <app-conversation-thread [items]="ticket.conversation" (commentSubmitted)="addComment($event)" />
         </mat-tab>
         <mat-tab label="Activity">
           <app-activity-timeline [items]="ticket.timeline" />
         </mat-tab>
         <mat-tab label="Attachments">
-          <app-attachment-panel [attachments]="ticket.attachments" />
+          <app-attachment-panel [attachments]="ticket.attachments" (fileSelected)="uploadAttachment($event)" (downloadRequested)="downloadAttachment($event)" />
         </mat-tab>
       </mat-tab-group>
     </main>
 
     <aside class="workspace__side">
       <app-metadata-panel [ticket]="ticket" />
-      <app-attachment-panel [attachments]="ticket.attachments" />
+      <app-attachment-panel [attachments]="ticket.attachments" (fileSelected)="uploadAttachment($event)" (downloadRequested)="downloadAttachment($event)" />
       <app-activity-timeline [items]="ticket.timeline" />
     </aside>
   </div>

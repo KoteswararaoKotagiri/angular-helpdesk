@@ -1,0 +1,15 @@
+<section class="role-grid" aria-label="Roles">
+  <article class="role-card" *ngFor="let role of roles" [ngClass]="'tone-' + role.tone">
+    <div class="role-card__top">
+      <div class="role-icon"><mat-icon>{{ role.system ? 'verified_user' : 'admin_panel_settings' }}</mat-icon></div>
+      <button mat-icon-button type="button" aria-label="Role actions"><mat-icon>more_horiz</mat-icon></button>
+    </div>
+    <h2>{{ role.name }}</h2>
+    <p>{{ role.description }}</p>
+    <div class="role-card__meta">
+      <span><strong>{{ role.users }}</strong> users</span>
+      <span><strong>{{ role.permissions }}</strong> permissions</span>
+      <span>{{ role.level }}</span>
+    </div>
+  </article>
+</section>

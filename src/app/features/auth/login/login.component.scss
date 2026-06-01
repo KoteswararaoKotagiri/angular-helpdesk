@@ -4,7 +4,9 @@
 
 .login-page {
   align-items: center;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--accent-light) 58%, transparent), transparent 34rem),
+    var(--bg);
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -15,6 +17,7 @@
   background: var(--surface);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
   padding: 40px;
   width: min(100%, 380px);
 }
@@ -32,7 +35,7 @@
   align-items: center;
   background: var(--accent);
   border-radius: var(--radius-md);
-  color: #fff;
+  color: var(--inverse);
   display: flex;
   font-size: 15px;
   font-weight: 600;
@@ -68,12 +71,18 @@
   justify-content: center;
   margin-bottom: 10px;
   padding: 10px;
-  transition: background 0.12s;
+  min-height: 44px;
+  transition: background 0.14s var(--ease-standard), border-color 0.14s var(--ease-standard), transform 0.14s var(--ease-standard);
   width: 100%;
 }
 
 .sso-btn:hover {
   background: var(--bg);
+  border-color: var(--border-strong);
+}
+
+.sso-btn:active {
+  transform: scale(0.99);
 }
 
 .login-divider {
@@ -113,7 +122,7 @@
 .sign-in-btn {
   background: var(--accent) !important;
   border-radius: var(--radius-md);
-  color: #fff !important;
+  color: var(--inverse) !important;
   height: 44px;
   width: 100%;
 }
@@ -130,7 +139,14 @@
 }
 
 @media (max-width: 480px) {
+  .login-page {
+    align-items: stretch;
+    padding: 12px;
+  }
+
   .login-card {
+    align-self: center;
     padding: 28px 22px;
+    width: 100%;
   }
 }

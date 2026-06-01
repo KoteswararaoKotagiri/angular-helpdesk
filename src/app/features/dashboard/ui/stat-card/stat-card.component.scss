@@ -7,18 +7,18 @@
   background: var(--surface);
   border: 0.5px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: 0 10px 26px rgba(20, 20, 18, 0.045);
+  box-shadow: var(--shadow-sm);
   cursor: pointer;
   min-height: 154px;
   min-width: 0;
   padding: 16px 18px;
-  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+  transition: border-color 0.16s var(--ease-standard), box-shadow 0.16s var(--ease-standard), transform 0.16s var(--ease-standard);
 }
 
 .stat-card:hover,
 .stat-card:focus-visible {
   border-color: var(--border-strong);
-  box-shadow: 0 16px 36px rgba(20, 20, 18, 0.08);
+  box-shadow: var(--shadow-md);
   transform: translateY(-1px);
 }
 
@@ -95,4 +95,11 @@ strong {
 
 .tone-red strong {
   color: var(--red);
+}
+
+@media (max-width: 520px) {
+  .stat-card {
+    min-height: 124px;
+    padding: 14px;
+  }
 }

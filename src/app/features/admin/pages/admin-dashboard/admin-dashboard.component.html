@@ -1,0 +1,53 @@
+<app-admin-header
+  title="Enterprise admin control center"
+  subtitle="Govern identity, workflow configuration, SLA posture, and operational risk from one focused administration surface."
+  [metrics]="metrics"
+  primaryAction="Create admin task"
+  secondaryAction="Export snapshot"
+/>
+
+<section class="control-grid">
+  <app-admin-configuration-card *ngFor="let card of cards" [item]="card" />
+</section>
+
+<section class="state-grid">
+  <app-admin-empty-state
+    icon="manage_search"
+    title="No matching admin records"
+    message="Filtered administration views stay recoverable with clear reset and creation paths."
+    actionLabel="Reset filters"
+  />
+  <app-admin-loading-state [rows]="4" />
+</section>
+
+<section class="ops-grid">
+  <article class="panel">
+    <div class="panel__header">
+      <div>
+        <span>Operational health</span>
+        <h2>Control plane signals</h2>
+      </div>
+      <mat-icon>query_stats</mat-icon>
+    </div>
+    <div class="signal-row"><strong>Authentication</strong><span class="good">Healthy</span><em>JWT sessions normal</em></div>
+    <div class="signal-row"><strong>Notifications</strong><span class="good">Online</span><em>SignalR connected</em></div>
+    <div class="signal-row"><strong>Storage</strong><span>Review</span><em>78% attachment quota</em></div>
+    <div class="signal-row"><strong>Escalations</strong><span class="risk">Risk</span><em>3 SLA policies at threshold</em></div>
+  </article>
+
+  <article class="panel">
+    <div class="panel__header">
+      <div>
+        <span>Recommended actions</span>
+        <h2>Admin work queue</h2>
+      </div>
+      <mat-icon>playlist_add_check</mat-icon>
+    </div>
+    <ol>
+      <li>Review inactive privileged accounts older than 30 days.</li>
+      <li>Assign owners to Facilities and Payroll categories.</li>
+      <li>Validate escalation recipients for critical infrastructure SLA.</li>
+      <li>Publish updated requester notification template.</li>
+    </ol>
+  </article>
+</section>

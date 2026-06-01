@@ -1,4 +1,14 @@
 @mixin focus-ring {
-  outline: 2px solid currentColor;
+  box-shadow: var(--focus-ring);
+  outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+@mixin interactive-surface {
+  transition:
+    background-color 0.16s var(--ease-standard),
+    border-color 0.16s var(--ease-standard),
+    box-shadow 0.16s var(--ease-standard),
+    color 0.16s var(--ease-standard),
+    transform 0.16s var(--ease-standard);
 }

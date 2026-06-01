@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { NotificationService } from '../../core/services/notification.service';
 import { NotificationPanelComponent } from '../notification-panel/notification-panel.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { TopbarComponent } from '../topbar/topbar.component';
@@ -12,9 +13,15 @@ import { TopbarComponent } from '../topbar/topbar.component';
   styleUrl: './main-layout.component.scss'
 })
 export class MainLayoutComponent {
+  private readonly notificationService = inject(NotificationService);
+
   isSidebarCollapsed = false;
   isMobileSidebarOpen = false;
   isNotificationPanelOpen = false;
+
+  constructor() {
+    this.notificationService.startRealtime();
+  }
 
   toggleSidebar(): void {
     this.isSidebarCollapsed = !this.isSidebarCollapsed;

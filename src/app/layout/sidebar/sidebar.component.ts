@@ -36,9 +36,9 @@ export class SidebarComponent {
   ];
 
   readonly managementNavItems: SidebarNavItem[] = [
-    { label: 'Admin panel', icon: 'settings', route: '/admin' },
-    { label: 'Users', icon: 'group', route: '/admin', badge: '24', neutral: true },
-    { label: 'Departments', icon: 'business', route: '/admin' },
-    { label: 'Audit logs', icon: 'description', route: '/admin' }
+    { label: 'Admin panel', icon: 'settings', route: '/admin/dashboard' },
+    { label: 'Users', icon: 'group', route: '/admin/users', badge: '248', neutral: true },
+    { label: 'Departments', icon: 'business', route: '/admin/departments' },
+    { label: 'Audit logs', icon: 'description', route: '/admin/audit-logs' }
   ];
 }

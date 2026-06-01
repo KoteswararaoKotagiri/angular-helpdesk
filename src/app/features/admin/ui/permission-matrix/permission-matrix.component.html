@@ -1,0 +1,32 @@
+<section class="permission-shell" aria-label="Permission matrix">
+  <div class="matrix-head">
+    <span>Permission</span>
+    <span>Admin</span>
+    <span>Manager</span>
+    <span>Engineer</span>
+    <span>Requester</span>
+  </div>
+
+  <mat-accordion multi>
+    <mat-expansion-panel *ngFor="let group of groups" [expanded]="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon>{{ group.icon }}</mat-icon>
+          {{ group.name }}
+        </mat-panel-title>
+        <mat-panel-description>{{ group.permissions.length }} permissions</mat-panel-description>
+      </mat-expansion-panel-header>
+
+      <div class="permission-row" *ngFor="let permission of group.permissions">
+        <span class="permission-copy">
+          <strong>{{ permission.name }}</strong>
+          <small>{{ permission.description }}</small>
+        </span>
+        <span><mat-slide-toggle [checked]="permission.admin" aria-label="Admin permission"></mat-slide-toggle></span>
+        <span><mat-slide-toggle [checked]="permission.manager" aria-label="Manager permission"></mat-slide-toggle></span>
+        <span><mat-slide-toggle [checked]="permission.engineer" aria-label="Engineer permission"></mat-slide-toggle></span>
+        <span><mat-slide-toggle [checked]="permission.requester" aria-label="Requester permission"></mat-slide-toggle></span>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>

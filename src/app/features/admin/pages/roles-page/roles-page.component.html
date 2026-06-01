@@ -1,0 +1,9 @@
+<app-admin-header
+  title="Role management"
+  subtitle="Design role hierarchy, clarify ownership, and keep administrative access understandable at enterprise scale."
+  [metrics]="metrics"
+  primaryAction="Create role"
+  secondaryAction="Access review"
+/>
+<app-admin-filter-toolbar placeholder="Search roles by name, tier, or responsibility" [filters]="filters" resultLabel="8 roles" />
+<app-admin-role-table [roles]="roles" />

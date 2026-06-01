@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { AsyncPipe, DOCUMENT } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-topbar',
@@ -23,9 +24,10 @@ import { filter, map, startWith } from 'rxjs';
   templateUrl: './topbar.component.html',
   styleUrl: './topbar.component.scss'
 })
-export class TopbarComponent {
+export class TopbarComponent implements OnInit {
   private readonly document = inject(DOCUMENT);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   @Input() hasUnreadNotifications = false;
   @Output() sidebarToggle = new EventEmitter<void>();
@@ -40,9 +42,20 @@ export class TopbarComponent {
 
   isDarkTheme = false;
 
+  ngOnInit(): void {
+    this.isDarkTheme = this.document.documentElement.getAttribute('data-theme') === 'dark';
+  }
+
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
-    this.document.documentElement.setAttribute('data-theme', this.isDarkTheme ? 'dark' : 'light');
+    const theme = this.isDarkTheme ? 'dark' : 'light';
+
+    this.document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('helpdesk-theme', theme);
+  }
+
+  logout(): void {
+    this.authService.logout();
   }
 
   private resolveTitle(url: string): string {

@@ -1,0 +1,31 @@
+<header class="admin-header">
+  <div class="admin-header__copy">
+    <span class="eyebrow">{{ eyebrow }}</span>
+    <h1>{{ title }}</h1>
+    <p>{{ subtitle }}</p>
+  </div>
+
+  <div class="admin-header__actions">
+    <button *ngIf="secondaryAction" mat-stroked-button type="button">
+      <mat-icon>download</mat-icon>
+      {{ secondaryAction }}
+    </button>
+    <button *ngIf="primaryAction" mat-flat-button color="primary" type="button">
+      <mat-icon>add</mat-icon>
+      {{ primaryAction }}
+    </button>
+  </div>
+</header>
+
+<section class="metric-grid" *ngIf="metrics.length" aria-label="Administration metrics">
+  <article class="metric-card" *ngFor="let metric of metrics" [ngClass]="'tone-' + metric.tone">
+    <div class="metric-card__icon">
+      <mat-icon>{{ metric.icon }}</mat-icon>
+    </div>
+    <div>
+      <span>{{ metric.label }}</span>
+      <strong>{{ metric.value }}</strong>
+      <small>{{ metric.meta }}</small>
+    </div>
+  </article>
+</section>

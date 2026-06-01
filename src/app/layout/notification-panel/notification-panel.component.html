@@ -16,7 +16,7 @@
     </div>
   </header>
 
-  @for (notification of notifications; track notification.text) {
+  @for (notification of (notifications$ | async) ?? []; track notification.text) {
     <button class="notif-item" [class.unread]="notification.unread" type="button">
       <span
         class="notif-icon"

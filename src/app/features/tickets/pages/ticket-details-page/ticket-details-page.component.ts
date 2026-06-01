@@ -1,8 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
-import { TicketDetail } from '../../models/ticket-details.models';
+import { forkJoin } from 'rxjs';
+import { AttachmentApi } from '../../../../api/attachment.api';
+import { CommentApi } from '../../../../api/comment.api';
+import { AttachmentDto, CommentDto, TicketDto } from '../../../../api/dtos';
+import { TicketApi } from '../../../../api/ticket.api';
+import { ConversationItem, TicketAttachment, TicketDetail, TicketParticipantRole, TimelineItem } from '../../models/ticket-details.models';
 import { ActivityTimelineComponent } from '../../ui/activity-timeline/activity-timeline.component';
 import { AttachmentPanelComponent } from '../../ui/attachment-panel/attachment-panel.component';
 import { ConversationThreadComponent } from '../../ui/conversation-thread/conversation-thread.component';
@@ -19,102 +25,212 @@ import { TicketHeaderComponent } from '../../ui/ticket-header/ticket-header.comp
 })
 export class TicketDetailsPageComponent {
   private readonly route = inject(ActivatedRoute);
-  readonly routeTicketId = this.route.snapshot.paramMap.get('ticketId') ?? 'HD-1042';
+  private readonly ticketApi = inject(TicketApi);
+  private readonly commentApi = inject(CommentApi);
+  private readonly attachmentApi = inject(AttachmentApi);
+  private readonly destroyRef = inject(DestroyRef);
 
-  readonly ticket: TicketDetail = {
+  readonly routeTicketId = this.route.snapshot.paramMap.get('ticketId') ?? 'HD-1042';
+  private apiTicketId: number | string = this.routeTicketId.replace('#', '');
+
+  ticket: TicketDetail = {
     id: `#${this.routeTicketId}`,
-    title: 'Production server down - authentication service returning 503 errors',
-    requester: { name: 'Koteswar Rao', initials: 'KR', role: 'requester', title: 'Employee, Finance Operations', online: true },
-    assignee: { name: 'Rahul K.', initials: 'RK', role: 'engineer', title: 'L2 Support Engineer', online: true },
-    status: 'In progress',
-    statusTone: 'amber',
-    priority: 'Critical',
-    priorityTone: 'red',
-    category: 'Infrastructure',
-    department: 'IT Operations',
-    createdAt: 'Today, 9:12 AM',
-    updatedAt: 'Just now',
-    firstResponseDue: 'met in 8m',
-    resolutionDue: '1h 12m',
-    slaPercent: 86,
-    slaTone: 'red',
-    slaLabel: 'Resolution at risk',
-    collaborators: [
-      { name: 'Anita M.', initials: 'AM', role: 'engineer', title: 'Incident Commander', online: true },
-      { name: 'Priya S.', initials: 'PS', role: 'manager', title: 'Support Manager', online: true },
-      { name: 'Vijay K.', initials: 'VK', role: 'engineer', title: 'Platform Engineer' }
-    ],
-    watchers: [
-      { name: 'Anita M.', initials: 'AM', online: true },
-      { name: 'Priya S.', initials: 'PS', online: true },
-      { name: 'Vijay K.', initials: 'VK' },
-      { name: 'HR Ops', initials: 'HO' }
-    ],
-    tags: ['production', 'auth-service', 'sla-risk', 'finance-impact'],
-    attachments: [
-      { name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago', previewKind: 'log', status: 'ready', summary: 'Gateway 503 spike around MFA callback.' },
-      { name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago', previewKind: 'image', status: 'ready', summary: 'User-facing 503 error after MFA.' },
-      { name: 'incident-runbook.pdf', type: 'PDF', size: '860 KB', icon: 'picture_as_pdf', addedBy: 'Anita M.', addedAt: '24 min ago', previewKind: 'pdf', status: 'ready', summary: 'Rollback and gateway mitigation steps.' },
-      { name: 'auth-mitigation-plan.xlsx', type: 'XLSX', size: '312 KB', icon: 'table_chart', addedBy: 'Priya S.', addedAt: 'Uploading', previewKind: 'spreadsheet', status: 'uploading', progress: 68, summary: 'Impact tracker and owner checklist.' }
-    ],
-    conversation: [
-      {
-        id: 'c1',
-        type: 'public',
-        author: { name: 'Koteswar Rao', initials: 'KR', role: 'requester', title: 'Requester', online: true },
-        timestamp: 'Today, 9:12 AM',
-        body: 'The finance team is unable to sign in. We are seeing intermittent 503 errors after entering MFA. Month-end approvals are blocked for about 40 users.',
-        status: 'Customer reply',
-        attachments: [{ name: 'error-screenshot.png', type: 'PNG', size: '1.8 MB', icon: 'image', addedBy: 'Koteswar Rao', addedAt: '18 min ago', previewKind: 'image', status: 'ready' }],
-        reactions: ['Seen by support'],
-        unread: true
-      },
-      {
-        id: 'c2',
-        type: 'public',
-        author: { name: 'Rahul K.', initials: 'RK', role: 'engineer', title: 'L2 Support Engineer', online: true },
-        timestamp: 'Today, 9:19 AM',
-        body: 'Thanks for the details. We can reproduce the 503 from the auth gateway and have moved this to critical priority. We are checking the deployment health and will keep this thread updated every 15 minutes.',
-        status: 'Engineer reply',
-        edited: true,
-        replyCount: 2,
-        mentions: ['@Anita']
-      },
-      {
-        id: 'c3',
-        type: 'internal',
-        author: { name: 'Anita M.', initials: 'AM', role: 'engineer', title: 'Incident Commander', online: true },
-        timestamp: 'Today, 9:23 AM',
-        body: 'Internal: rollback candidate is v2.18.4. Vijay is checking gateway saturation first so we do not rollback unnecessarily. Keep customer updates concise and avoid ETA until confirmed.',
-        mentions: ['@Vijay', '@Rahul'],
-        replyCount: 1
-      },
-      {
-        id: 'c5',
-        type: 'activity',
-        author: { name: 'System', initials: 'SY', role: 'system', title: 'Automation' },
-        timestamp: 'Today, 9:27 AM',
-        body: 'Priority changed to Critical and incident channel created.',
-        status: 'Workflow activity'
-      },
-      {
-        id: 'c4',
-        type: 'public',
-        author: { name: 'Rahul K.', initials: 'RK', role: 'engineer', title: 'L2 Support Engineer', online: true },
-        timestamp: 'Today, 9:31 AM',
-        body: 'We found elevated latency in the authentication gateway and are applying a mitigation now. Users may see sign-in succeed after retrying once. We will confirm when the service is fully stable.',
-        status: 'Pinned update',
-        attachments: [{ name: 'auth-service-logs.txt', type: 'TXT', size: '420 KB', icon: 'description', addedBy: 'Rahul K.', addedAt: '6 min ago', previewKind: 'log', status: 'ready' }],
-        reactions: ['Acknowledged', 'Pinned'],
-        unread: true
-      }
-    ],
-    timeline: [
-      { icon: 'bolt', title: 'Live collaboration started', description: '3 teammates joined the workspace.', timestamp: 'Just now', tone: 'green' },
-      { icon: 'attach_file', title: 'Logs attached', description: 'Rahul added auth-service-logs.txt.', timestamp: '6 min ago', tone: 'blue' },
-      { icon: 'priority_high', title: 'Priority raised', description: 'Priority changed from High to Critical.', timestamp: '14 min ago', tone: 'red' },
-      { icon: 'person', title: 'Assigned to Rahul K.', description: 'Auto-routing matched IT Operations queue.', timestamp: '18 min ago', tone: 'amber' },
-      { icon: 'add_circle', title: 'Ticket created', description: 'Koteswar opened the incident from the employee portal.', timestamp: '29 min ago', tone: 'neutral' }
-    ]
+    title: '',
+    requester: { name: 'Requester', initials: 'RQ', role: 'requester', title: 'Requester' },
+    assignee: { name: 'Unassigned', initials: 'UA', role: 'engineer', title: 'Support Engineer' },
+    status: 'Open',
+    statusTone: 'blue',
+    priority: 'Medium',
+    priorityTone: 'blue',
+    category: 'General',
+    department: 'Unassigned',
+    createdAt: '',
+    updatedAt: '',
+    firstResponseDue: '',
+    resolutionDue: '',
+    slaPercent: 0,
+    slaTone: 'neutral',
+    slaLabel: 'No SLA',
+    collaborators: [],
+    watchers: [],
+    tags: [],
+    attachments: [],
+    conversation: [],
+    timeline: []
   };
+
+  constructor() {
+    this.loadTicket();
+  }
+
+  addComment(request: { body: string; isInternal: boolean }): void {
+    this.commentApi.addComment(this.apiTicketId, request).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => this.loadComments()
+    });
+  }
+
+  uploadAttachment(file: File): void {
+    this.attachmentApi.uploadAttachment(this.apiTicketId, file).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => this.loadAttachments()
+    });
+  }
+
+  downloadAttachment(attachment: TicketAttachment): void {
+    if (attachment.id === undefined) {
+      return;
+    }
+
+    this.attachmentApi.downloadAttachment(this.apiTicketId, attachment.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((blob) => {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = attachment.name;
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+  }
+
+  private loadTicket(): void {
+    this.ticketApi
+      .getTickets({ search: this.apiTicketId, pageNumber: 1, pageSize: 20 })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((response) => {
+        const ticket = response.items.find((item) => String(item.id) === this.apiTicketId || item.ticketNumber === this.apiTicketId) ?? response.items[0];
+        if (ticket) {
+          this.apiTicketId = ticket.id;
+          this.ticket = this.mapTicket(ticket);
+        }
+        this.loadDetails();
+      });
+  }
+
+  private loadDetails(): void {
+    forkJoin({
+      comments: this.commentApi.getComments(this.apiTicketId),
+      attachments: this.attachmentApi.getAttachments(this.apiTicketId)
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(({ comments, attachments }) => {
+        this.ticket = {
+          ...this.ticket,
+          conversation: comments.map((comment) => this.mapComment(comment)),
+          attachments: attachments.map((attachment) => this.mapAttachment(attachment)),
+          timeline: comments.map((comment): TimelineItem => ({
+            icon: comment.isInternal ? 'sticky_note_2' : 'chat_bubble',
+            title: comment.isInternal ? 'Internal note added' : 'Comment added',
+            description: comment.body,
+            timestamp: formatDate(comment.createdAt),
+            tone: comment.isInternal ? 'amber' : 'blue'
+          }))
+        };
+      });
+  }
+
+  private loadComments(): void {
+    this.commentApi.getComments(this.apiTicketId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((comments) => {
+      this.ticket = { ...this.ticket, conversation: comments.map((comment) => this.mapComment(comment)) };
+    });
+  }
+
+  private loadAttachments(): void {
+    this.attachmentApi.getAttachments(this.apiTicketId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe((attachments) => {
+      this.ticket = { ...this.ticket, attachments: attachments.map((attachment) => this.mapAttachment(attachment)) };
+    });
+  }
+
+  private mapTicket(ticket: TicketDto): TicketDetail {
+    const requester = ticket.requesterName ?? 'Requester';
+    const assignee = ticket.assigneeName ?? 'Unassigned';
+    return {
+      ...this.ticket,
+      id: `#${ticket.ticketNumber ?? ticket.id}`,
+      title: ticket.title,
+      requester: { name: requester, initials: initials(requester), role: 'requester', title: 'Requester' },
+      assignee: { name: assignee, initials: initials(assignee), role: 'engineer', title: 'Support Engineer' },
+      status: ticket.statusName ?? 'Open',
+      statusTone: statusTone(ticket.statusName),
+      priority: ticket.priorityName ?? 'Medium',
+      priorityTone: priorityTone(ticket.priorityName),
+      category: ticket.categoryName ?? 'General',
+      department: ticket.departmentName ?? 'Unassigned',
+      createdAt: formatDate(ticket.createdAt),
+      updatedAt: formatDate(ticket.updatedAt),
+      firstResponseDue: formatDate(ticket.firstResponseDueAt),
+      resolutionDue: formatDate(ticket.resolutionDueAt),
+      slaLabel: ticket.resolutionDueAt ? 'Resolution due' : 'No SLA',
+      tags: [ticket.departmentName, ticket.priorityName, ticket.statusName].filter((value): value is string => !!value)
+    };
+  }
+
+  private mapComment(comment: CommentDto): ConversationItem {
+    const author = comment.authorName ?? 'User';
+    const role = normalizeRole(comment.authorRole);
+    return {
+      id: String(comment.id),
+      type: comment.isInternal ? 'internal' as const : 'public' as const,
+      author: { name: author, initials: initials(author), role, title: comment.authorRole ?? 'User' },
+      timestamp: formatDate(comment.createdAt),
+      body: comment.body,
+      status: comment.isInternal ? 'Internal note' : 'Comment'
+    };
+  }
+
+  private mapAttachment(attachment: AttachmentDto): TicketAttachment {
+    return {
+      id: attachment.id,
+      name: attachment.fileName,
+      type: attachment.contentType ?? 'File',
+      size: formatBytes(attachment.fileSize),
+      icon: attachmentIcon(attachment.contentType),
+      addedBy: attachment.uploadedByName ?? 'User',
+      addedAt: formatDate(attachment.uploadedAt),
+      status: 'ready'
+    };
+  }
+}
+
+function initials(name: string): string {
+  return name.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase() || 'UA';
+}
+
+function normalizeRole(role = ''): TicketParticipantRole {
+  const normalized = role.toLowerCase();
+  if (normalized.includes('manager')) return 'manager';
+  if (normalized.includes('engineer') || normalized.includes('agent')) return 'engineer';
+  if (normalized.includes('system')) return 'system';
+  return 'requester';
+}
+
+function statusTone(status = ''): TicketDetail['statusTone'] {
+  const normalized = status.toLowerCase();
+  if (normalized.includes('resolved') || normalized.includes('closed')) return 'green';
+  if (normalized.includes('progress')) return 'amber';
+  if (normalized.includes('hold')) return 'purple';
+  return 'blue';
+}
+
+function priorityTone(priority = ''): TicketDetail['priorityTone'] {
+  const normalized = priority.toLowerCase();
+  if (normalized.includes('critical')) return 'red';
+  if (normalized.includes('high')) return 'amber';
+  if (normalized.includes('low')) return 'green';
+  return 'blue';
+}
+
+function formatDate(value?: string): string {
+  return value ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : 'Unknown';
+}
+
+function formatBytes(bytes = 0): string {
+  if (bytes === 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  return `${(bytes / 1024 ** index).toFixed(index === 0 ? 0 : 1)} ${units[index]}`;
+}
+
+function attachmentIcon(contentType = ''): string {
+  if (contentType.includes('image')) return 'image';
+  if (contentType.includes('pdf')) return 'picture_as_pdf';
+  if (contentType.includes('sheet') || contentType.includes('excel')) return 'table_chart';
+  return 'description';
 }

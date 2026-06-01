@@ -1,0 +1,35 @@
+:focus {
+  outline-color: transparent;
+}
+
+:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.cdk-keyboard-focused,
+.cdk-program-focused {
+  box-shadow: var(--focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@media (pointer: coarse) {
+  button,
+  a,
+  [role='button'],
+  .mat-mdc-icon-button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  apiUrl: '',
   apiBaseUrl: '',
-  signalrHubUrl: ''
+  signalrHubUrl: '/hubs/notifications'
 } as const;

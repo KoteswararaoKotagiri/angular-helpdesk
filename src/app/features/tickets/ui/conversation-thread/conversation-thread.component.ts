@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ConversationItem } from '../../models/ticket-details.models';
 import { CommentCardComponent } from '../comment-card/comment-card.component';
@@ -17,6 +17,7 @@ import { TypingIndicatorComponent } from '../typing-indicator/typing-indicator.c
 })
 export class ConversationThreadComponent {
   @Input({ required: true }) items: ConversationItem[] = [];
+  @Output() commentSubmitted = new EventEmitter<{ body: string; isInternal: boolean }>();
 
   get activeParticipants(): number {
     return new Set(this.items.map((item) => item.author.name)).size;

@@ -1,0 +1,75 @@
+.permission-shell {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.matrix-head,
+.permission-row {
+  align-items: center;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(260px, 1fr) 92px 92px 92px 92px;
+  min-width: 760px;
+}
+
+.matrix-head {
+  background: var(--surface2);
+  color: var(--text3);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 12px 18px;
+  text-transform: uppercase;
+}
+
+mat-accordion {
+  display: block;
+  overflow-x: auto;
+}
+
+mat-expansion-panel {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+mat-panel-title {
+  align-items: center;
+  color: var(--text);
+  display: flex;
+  font-size: 13.5px;
+  font-weight: 650;
+  gap: 8px;
+}
+
+mat-panel-title mat-icon {
+  color: var(--accent);
+}
+
+mat-panel-description {
+  color: var(--text3);
+  font-size: 12px;
+}
+
+.permission-row {
+  border-top: 0.5px solid var(--border);
+  padding: 12px 18px;
+}
+
+.permission-copy strong,
+.permission-copy small {
+  display: block;
+}
+
+.permission-copy strong {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.permission-copy small {
+  color: var(--text3);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 2px;
+}

@@ -1,0 +1,13 @@
+<app-admin-header
+  title="Ticket configuration and system settings"
+  subtitle="Shape operational workflows, SLA behavior, notifications, integrations, AI readiness, and platform-level defaults."
+  [metrics]="metrics"
+  primaryAction="New configuration"
+  secondaryAction="Change history"
+/>
+
+<section class="config-grid">
+  <app-admin-configuration-card *ngFor="let item of configuration" [item]="item" />
+</section>
+
+<app-admin-settings-panel [sections]="sections" />

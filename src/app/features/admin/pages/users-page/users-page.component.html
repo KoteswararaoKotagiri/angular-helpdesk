@@ -1,0 +1,10 @@
+<app-admin-header
+  title="User management"
+  subtitle="Provision users, assign roles, manage department ownership, and safely operate at bulk scale."
+  [metrics]="metrics"
+  primaryAction="Create user"
+  secondaryAction="Import users"
+/>
+<app-admin-filter-toolbar placeholder="Search users by name, email, role, or department" [filters]="filters" resultLabel="Showing 6 of 248" />
+<app-admin-bulk-actions-bar [selectedCount]="selectedCount" context="users" />
+<app-admin-user-table [users]="users" />

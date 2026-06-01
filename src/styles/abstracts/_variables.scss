@@ -1,25 +1,36 @@
 $app-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
 
 :root {
-  --accent: #534ab7;
-  --accent-hover: #3c3489;
+  --accent: #4f46b8;
+  --accent-hover: #382f8f;
   --accent-light: #eeedfe;
-  --accent-text: #3c3489;
-  --bg: #f4f4f1;
+  --accent-text: #352d82;
+  --bg: #f6f6f3;
+  --bg-elevated: #fbfbf9;
   --surface: #ffffff;
   --surface2: #f8f8f6;
-  --border: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.14);
-  --text: #1a1a1a;
-  --text2: #5f5e5a;
-  --text3: #9a9896;
+  --surface3: #efefec;
+  --surface-glass: rgba(255, 255, 255, 0.84);
+  --border: rgba(28, 28, 24, 0.08);
+  --border-strong: rgba(28, 28, 24, 0.15);
+  --text: #191918;
+  --text2: #5d5c58;
+  --text3: #8c8983;
+  --inverse: #ffffff;
   --sidebar-w: 228px;
   --topbar-h: 54px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
   --radius-xl: 16px;
-  --red: #e24b4a;
+  --shadow-sm: 0 8px 22px rgba(20, 20, 18, 0.04);
+  --shadow-md: 0 16px 38px rgba(20, 20, 18, 0.07);
+  --shadow-lg: 0 24px 60px rgba(20, 20, 18, 0.12);
+  --focus-ring: 0 0 0 3px color-mix(in srgb, var(--accent) 24%, transparent);
+  --skeleton: linear-gradient(90deg, var(--surface2) 0%, var(--surface3) 42%, var(--surface2) 84%);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+  --red: #d94141;
   --red-bg: #fcebeb;
   --red-text: #a32d2d;
   --amber: #ba7517;
@@ -33,4 +44,5 @@ $app-font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto
   --blue-text: #0c447c;
   --purple-bg: #eeedfe;
   --purple-text: #3c3489;
+  --success: #4f9b22;
 }

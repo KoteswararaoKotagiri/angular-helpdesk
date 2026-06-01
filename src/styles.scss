@@ -2,10 +2,29 @@
 @use './styles/abstracts/variables';
 @use './styles/abstracts/mixins';
 @use './styles/abstracts/spacing';
+@use './styles/abstracts/breakpoints';
+@use './styles/abstracts/animations';
 @use './styles/base/reset';
 @use './styles/base/typography';
+@use './styles/base/utilities';
+@use './styles/base/accessibility';
 @use './styles/themes/light-theme';
 @use './styles/themes/dark-theme';
 
 html, body { height: 100%; }
 body { margin: 0; }
+
+.mat-mdc-menu-panel,
+.mat-mdc-select-panel,
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--surface) !important;
+  color: var(--text) !important;
+}
+
+.mat-mdc-form-field {
+  --mdc-outlined-text-field-outline-color: var(--border);
+  --mdc-outlined-text-field-hover-outline-color: var(--border-strong);
+  --mdc-outlined-text-field-focus-outline-color: var(--accent);
+  --mdc-outlined-text-field-input-text-color: var(--text);
+  --mdc-outlined-text-field-label-text-color: var(--text2);
+}

@@ -1,0 +1,9 @@
+<app-admin-header
+  title="Department management"
+  subtitle="Model service ownership, department routing, category coverage, and active or inactive administration boundaries."
+  [metrics]="metrics"
+  primaryAction="Create department"
+  secondaryAction="Export departments"
+/>
+<app-admin-filter-toolbar placeholder="Search departments, owners, or SLA policies" [filters]="filters" resultLabel="5 departments shown" />
+<app-admin-department-table [departments]="departments" />

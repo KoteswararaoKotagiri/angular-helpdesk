@@ -1,0 +1,29 @@
+<section class="filter-toolbar" aria-label="Search and filters">
+  <label class="search-box">
+    <mat-icon>search</mat-icon>
+    <input type="search" [placeholder]="placeholder" />
+  </label>
+
+  <div class="filter-pills">
+    <button
+      *ngFor="let filter of filters"
+      class="filter-pill"
+      [class.active]="filter.active"
+      [ngClass]="filter.tone ? 'tone-' + filter.tone : ''"
+      type="button"
+    >
+      {{ filter.label }}
+      <span *ngIf="filter.count !== undefined">{{ filter.count }}</span>
+    </button>
+  </div>
+
+  <div class="toolbar-actions">
+    <span *ngIf="resultLabel">{{ resultLabel }}</span>
+    <button mat-icon-button type="button" matTooltip="Filter">
+      <mat-icon>tune</mat-icon>
+    </button>
+    <button mat-icon-button type="button" matTooltip="Column settings">
+      <mat-icon>view_column</mat-icon>
+    </button>
+  </div>
+</section>

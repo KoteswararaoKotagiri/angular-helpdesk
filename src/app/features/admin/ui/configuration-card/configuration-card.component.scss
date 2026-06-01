@@ -1,0 +1,50 @@
+.config-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  min-height: 184px;
+  padding: 16px;
+}
+
+.config-card__top {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.config-icon {
+  align-items: center;
+  border-radius: var(--radius-md);
+  display: inline-flex;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+}
+
+h2 {
+  color: var(--text);
+  font-size: 15px;
+  margin: 14px 0 5px;
+}
+
+p {
+  color: var(--text2);
+  font-size: 12.5px;
+  line-height: 1.45;
+  margin: 0;
+  min-height: 54px;
+}
+
+span {
+  color: var(--text3);
+  display: block;
+  font-size: 12px;
+  margin: 12px 0 8px;
+}
+
+.tone-blue .config-icon { background: var(--blue-bg); color: var(--blue-text); }
+.tone-green .config-icon { background: var(--green-bg); color: var(--green-text); }
+.tone-amber .config-icon { background: var(--amber-bg); color: var(--amber-text); }
+.tone-red .config-icon { background: var(--red-bg); color: var(--red-text); }
+.tone-purple .config-icon { background: var(--purple-bg); color: var(--purple-text); }
+.tone-neutral .config-icon { background: var(--surface2); color: var(--text2); }

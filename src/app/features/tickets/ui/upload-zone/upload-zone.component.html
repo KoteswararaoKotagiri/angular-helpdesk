@@ -1,4 +1,5 @@
-<button class="upload-zone" type="button">
+<input #fileInput type="file" hidden (change)="onFileSelected($event)" />
+<button class="upload-zone" type="button" (click)="chooseFile(fileInput)">
   <span class="upload-zone__icon"><mat-icon>cloud_upload</mat-icon></span>
   <span class="upload-zone__copy">
     <strong>Drop files here or browse</strong>

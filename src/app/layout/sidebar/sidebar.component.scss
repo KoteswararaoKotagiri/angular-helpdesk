@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: width 0.25s ease, transform 0.25s ease;
+  transition: width 0.22s var(--ease-standard), transform 0.22s var(--ease-emphasized);
   width: var(--sidebar-w);
   z-index: 30;
 }
@@ -88,13 +88,18 @@
   padding: 7px 10px;
   position: relative;
   text-decoration: none;
-  transition: background 0.12s, color 0.12s;
+  min-height: 38px;
+  transition: background 0.14s var(--ease-standard), color 0.14s var(--ease-standard), transform 0.14s var(--ease-standard);
   white-space: nowrap;
 }
 
 .nav-item:hover {
   background: var(--bg);
   color: var(--text);
+}
+
+.nav-item:active {
+  transform: scale(0.985);
 }
 
 .nav-item.active {
@@ -149,12 +154,17 @@
   gap: 9px;
   overflow: hidden;
   padding: 7px 10px;
-  transition: background 0.12s;
+  min-height: 44px;
+  transition: background 0.14s var(--ease-standard), transform 0.14s var(--ease-standard);
   width: 100%;
 }
 
 .user-card:hover {
   background: var(--bg);
+}
+
+.user-card:active {
+  transform: scale(0.985);
 }
 
 .avatar {
@@ -206,12 +216,13 @@
 
 @media (max-width: 700px) {
   .sidebar {
+    box-shadow: var(--shadow-lg);
     bottom: 0;
     left: 0;
     position: fixed;
     top: 0;
     transform: translateX(-100%);
-    width: 240px !important;
+    width: min(86vw, 292px) !important;
   }
 
   .sidebar.mobile-open {

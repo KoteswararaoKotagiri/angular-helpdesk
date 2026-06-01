@@ -3,14 +3,15 @@
 }
 
 .topbar {
-  background: var(--surface);
+  backdrop-filter: blur(18px);
+  background: var(--surface-glass);
   border-bottom: 0.5px solid var(--border);
   color: var(--text);
   display: flex;
   flex-shrink: 0;
   gap: 10px;
   height: var(--topbar-h);
-  padding: 0 20px;
+  padding: 0 clamp(12px, 1.6vw, 20px);
   position: sticky;
   top: 0;
   z-index: 20;
@@ -46,13 +47,15 @@
   cursor: text;
   display: flex;
   gap: 8px;
+  min-height: 38px;
   min-width: 220px;
   padding: 7px 12px;
-  transition: border-color 0.15s;
+  transition: background 0.15s var(--ease-standard), border-color 0.15s var(--ease-standard), box-shadow 0.15s var(--ease-standard);
 }
 
 .search-wrap:focus-within {
   border-color: var(--accent);
+  box-shadow: var(--focus-ring);
 }
 
 .search-wrap input {
@@ -102,11 +105,18 @@
   color: var(--text);
 }
 
+.icon-btn:active,
+.mobile-toggle:active,
+.avatar-button:active {
+  transform: scale(0.96);
+}
+
 .mobile-toggle {
   display: none;
 }
 
 .notif-dot {
+  animation: app-scale-in 0.24s var(--ease-emphasized);
   background: var(--red);
   border: 1.5px solid var(--surface);
   border-radius: 50%;
@@ -156,5 +166,20 @@
 
   .topbar {
     padding: 0 12px;
+  }
+
+  .breadcrumb,
+  .divider-v {
+    display: none;
+  }
+
+  .topbar-title {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 420px) {
+  .avatar-button {
+    display: none;
   }
 }

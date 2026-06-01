@@ -1,0 +1,19 @@
+<section class="audit-table" role="table" aria-label="Audit logs">
+  <div class="table-head" role="row">
+    <span>Event</span>
+    <span>Category</span>
+    <span>Actor</span>
+    <span>IP address</span>
+    <span>Time</span>
+  </div>
+  <div class="table-row" role="row" *ngFor="let log of logs">
+    <span class="event-cell">
+      <span class="event-icon" [ngClass]="'tone-' + log.tone"><mat-icon>history</mat-icon></span>
+      <span><strong>{{ log.action }}</strong><small>{{ log.target }}</small></span>
+    </span>
+    <span>{{ log.category }}</span>
+    <span>{{ log.actor }}</span>
+    <span>{{ log.ip }}</span>
+    <span>{{ log.time }}</span>
+  </div>
+</section>

@@ -7,8 +7,8 @@
     </div>
     <button mat-icon-button type="button" matTooltip="Upload file"><mat-icon>add</mat-icon></button>
   </header>
-  <app-upload-zone />
+  <app-upload-zone (fileSelected)="fileSelected.emit($event)" />
   <div class="attachments__list">
-    <app-attachment-card *ngFor="let attachment of attachments" [attachment]="attachment" />
+    <app-attachment-card *ngFor="let attachment of attachments" [attachment]="attachment" (downloadRequested)="downloadRequested.emit($event)" />
   </div>
 </section>

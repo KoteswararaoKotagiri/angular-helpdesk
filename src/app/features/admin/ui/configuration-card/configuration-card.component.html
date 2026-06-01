@@ -1,0 +1,10 @@
+<article class="config-card" [ngClass]="'tone-' + item.tone">
+  <div class="config-card__top">
+    <div class="config-icon"><mat-icon>{{ item.icon }}</mat-icon></div>
+    <button mat-icon-button type="button" aria-label="Configure"><mat-icon>arrow_forward</mat-icon></button>
+  </div>
+  <h2>{{ item.title }}</h2>
+  <p>{{ item.description }}</p>
+  <span>{{ item.meta }}</span>
+  <mat-progress-bar *ngIf="item.progress !== undefined" mode="determinate" [value]="item.progress" />
+</article>

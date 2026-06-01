@@ -14,6 +14,7 @@ export interface TicketParticipant {
 }
 
 export interface TicketAttachment {
+  id?: number | string;
   name: string;
   type: string;
   size: string;

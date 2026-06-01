@@ -1,13 +1,22 @@
 <section class="ticket-list-page">
-  <app-ticket-toolbar [metrics]="metrics" />
-  <app-filter-bar [filters]="filters" />
+  <app-ticket-toolbar [metrics]="metrics" [search]="search" (searchChange)="onSearchChange($event)" (refreshed)="refresh()" />
+  <app-filter-bar
+    [filters]="filters"
+    [statuses]="statuses"
+    [priorities]="priorities"
+    [departments]="departments"
+    (statusSelected)="onStatusSelected($event)"
+    (prioritySelected)="onPrioritySelected($event)"
+    (departmentSelected)="onDepartmentSelected($event)"
+    (resetSelected)="resetFilters()"
+  />
   <app-bulk-actions [selectedCount]="selectedCount" />
 
   <ng-container *ngIf="!isLoading; else loading">
     <app-ticket-empty-state *ngIf="showEmptyState; else ticketTable" />
     <ng-template #ticketTable>
       <app-ticket-table [tickets]="tickets" />
-      <app-pagination-bar label="Showing 1-8 of 47 tickets" />
+      <app-pagination-bar [label]="paginationLabel" [pageNumber]="pageNumber" [totalPages]="totalPages" (pageChanged)="changePage($event)" />
     </ng-template>
   </ng-container>
 

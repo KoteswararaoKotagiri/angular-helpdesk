@@ -1,0 +1,9 @@
+<app-admin-header
+  title="Audit logs"
+  subtitle="Searchable compliance evidence for user actions, configuration changes, login history, and ticket administration activity."
+  [metrics]="metrics"
+  primaryAction="Create export"
+  secondaryAction="Retention policy"
+/>
+<app-admin-filter-toolbar placeholder="Search actor, action, target, category, or IP address" [filters]="filters" resultLabel="5 latest events" />
+<app-admin-audit-log-table [logs]="logs" />

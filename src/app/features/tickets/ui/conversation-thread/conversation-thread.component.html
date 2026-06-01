@@ -1,7 +1,7 @@
 <section class="thread" aria-label="Ticket conversation">
   <app-conversation-toolbar [count]="items.length" [participants]="activeParticipants" />
 
-  <app-message-composer />
+  <app-message-composer (submitted)="commentSubmitted.emit($event)" />
 
   <div class="thread__presence">
     <app-typing-indicator names="Priya and Vijay" />

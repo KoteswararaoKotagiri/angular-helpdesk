@@ -1,6 +1,6 @@
 <section class="filter-bar" aria-label="Ticket filters">
   <div class="filter-bar__chips">
-    <button type="button" *ngFor="let filter of filters" [class.active]="filter.active" [ngClass]="'tone-' + (filter.tone || 'neutral')">
+    <button type="button" *ngFor="let filter of filters" [class.active]="filter.active" [ngClass]="'tone-' + (filter.tone || 'neutral')" (click)="filterSelected.emit(filter)">
       <mat-icon *ngIf="filter.icon">{{ filter.icon }}</mat-icon>
       <span>{{ filter.label }}</span>
       <strong *ngIf="filter.count !== undefined">{{ filter.count }}</strong>
@@ -10,10 +10,11 @@
     <button mat-stroked-button type="button" [matMenuTriggerFor]="statusMenu"><mat-icon>fact_check</mat-icon>Status</button>
     <button mat-stroked-button type="button" [matMenuTriggerFor]="priorityMenu"><mat-icon>flag</mat-icon>Priority</button>
     <button mat-stroked-button type="button"><mat-icon>person</mat-icon>Assignee</button>
-    <button mat-stroked-button type="button"><mat-icon>apartment</mat-icon>Department</button>
+    <button mat-stroked-button type="button" [matMenuTriggerFor]="departmentMenu"><mat-icon>apartment</mat-icon>Department</button>
     <button mat-stroked-button type="button"><mat-icon>date_range</mat-icon>Date</button>
-    <button mat-button type="button" class="filter-bar__reset">Reset</button>
+    <button mat-button type="button" class="filter-bar__reset" (click)="resetSelected.emit()">Reset</button>
   </div>
 </section>
-<mat-menu #statusMenu="matMenu"><button mat-menu-item>Open</button><button mat-menu-item>In progress</button><button mat-menu-item>Resolved</button></mat-menu>
-<mat-menu #priorityMenu="matMenu"><button mat-menu-item>Critical</button><button mat-menu-item>High</button><button mat-menu-item>Medium</button><button mat-menu-item>Low</button></mat-menu>
+<mat-menu #statusMenu="matMenu"><button mat-menu-item *ngFor="let status of statuses" (click)="statusSelected.emit(status)">{{ status.name }}</button></mat-menu>
+<mat-menu #priorityMenu="matMenu"><button mat-menu-item *ngFor="let priority of priorities" (click)="prioritySelected.emit(priority)">{{ priority.name }}</button></mat-menu>
+<mat-menu #departmentMenu="matMenu"><button mat-menu-item *ngFor="let department of departments" (click)="departmentSelected.emit(department)">{{ department.name }}</button></mat-menu>
