@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { DepartmentDto, RoleDto, TicketPriorityDto, TicketStatusDto } from './dtos';
+import { DepartmentDto, RoleDto, TicketCategoryDto, TicketPriorityDto, TicketStatusDto } from './dtos';
 import { toApiError } from './api-error';
 
 @Injectable({
@@ -27,5 +27,9 @@ export class MasterApi {
 
   getTicketPriorities(): Observable<TicketPriorityDto[]> {
     return this.http.get<TicketPriorityDto[]>(`${this.baseUrl}/ticket-priorities`).pipe(catchError((error: unknown) => throwError(() => toApiError(error))));
+  }
+
+  getTicketCategories(): Observable<TicketCategoryDto[]> {
+    return this.http.get<TicketCategoryDto[]>(`${this.baseUrl}/ticket-categories`).pipe(catchError((error: unknown) => throwError(() => toApiError(error))));
   }
 }

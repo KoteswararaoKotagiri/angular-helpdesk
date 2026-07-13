@@ -1,12 +1,26 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { finalize, forkJoin, of, catchError } from 'rxjs';
+import { DashboardApi } from '../../../../api/dashboard.api';
+import { SlaApi } from '../../../../api/sla.api';
+import {
+  ActivityResponse,
+  DashboardChartsResponse,
+  DashboardStatsResponse,
+  RecentTicketResponse,
+  SlaPerformanceResponse,
+  SlaTicketResponse
+} from '../../../../api/dtos';
 import {
   ActivityItem,
   ChartWidgetModel,
   DashboardAction,
   DashboardFilter,
+  DashboardTone,
   NotificationItem,
   SlaItem,
   StatCardModel,
@@ -30,6 +44,7 @@ import { StatCardComponent } from '../../ui/stat-card/stat-card.component';
     CommonModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ActivityFeedComponent,
     ChartWidgetComponent,
     DashboardCardComponent,
@@ -45,84 +60,24 @@ import { StatCardComponent } from '../../ui/stat-card/stat-card.component';
   styleUrl: './dashboard-page.component.scss'
 })
 export class DashboardPageComponent {
-  readonly todayLabel = 'Monday, 25 May 2026';
+  private readonly dashboardApi = inject(DashboardApi);
+  private readonly slaApi = inject(SlaApi);
+  private readonly destroyRef = inject(DestroyRef);
 
-  readonly filters: DashboardFilter[] = [
-    { label: 'All work', count: 180, active: true },
-    { label: 'My queue', count: 24, icon: 'person' },
-    { label: 'SLA risk', count: 3, icon: 'warning' },
-    { label: 'Unassigned', count: 9, icon: 'person_off' },
-    { label: 'Resolved today', count: 18, icon: 'task_alt' }
-  ];
+  readonly todayLabel = new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-  readonly stats: StatCardModel[] = [
-    { label: 'Open tickets', value: '47', icon: 'confirmation_number', tone: 'blue', change: '4 more than yesterday', changeDirection: 'down', meta: 'live' },
-    { label: 'In progress', value: '31', icon: 'sync', tone: 'amber', change: '8 owned by your team', changeDirection: 'neutral', meta: 'active' },
-    { label: 'Resolved today', value: '18', icon: 'check_circle', tone: 'green', change: '3 above daily average', changeDirection: 'up', meta: 'today' },
-    { label: 'Critical tickets', value: '8', icon: 'local_fire_department', tone: 'red', change: '2 require escalation', changeDirection: 'down', meta: 'p1' },
-    { label: 'SLA breaches', value: '3', icon: 'gpp_maybe', tone: 'red', change: 'Needs immediate attention', changeDirection: 'down', meta: 'risk' }
-  ];
+  isLoading = false;
+  error: string | null = null;
 
-  readonly charts: ChartWidgetModel[] = [
-    {
-      title: 'Tickets by status',
-      subtitle: 'This week',
-      actionLabel: 'Full report',
-      type: 'bar',
-      insight: 'Open volume is up in IT, but same-day resolution is trending ahead of target.',
-      series: [
-        { label: 'Open', value: 47, tone: 'blue' },
-        { label: 'In prog', value: 31, tone: 'amber' },
-        { label: 'On hold', value: 14, tone: 'purple' },
-        { label: 'Resolved', value: 68, tone: 'green' },
-        { label: 'Closed', value: 20, tone: 'neutral' }
-      ]
-    },
-    {
-      title: 'Priority distribution',
-      subtitle: 'Current queue',
-      actionLabel: 'Drill in',
-      type: 'donut',
-      insight: 'Critical work is concentrated in infrastructure and access management.',
-      series: [
-        { label: 'Critical', value: 8, tone: 'red' },
-        { label: 'High', value: 14, tone: 'amber' },
-        { label: 'Medium', value: 19, tone: 'blue' },
-        { label: 'Low', value: 6, tone: 'green' }
-      ]
-    },
-    {
-      title: 'Department analytics',
-      subtitle: '7-day volume',
-      type: 'line',
-      insight: 'IT and HR queues show the strongest correlation with policy rollouts this week.',
-      series: [
-        { label: 'Mon', value: 8, tone: 'accent' },
-        { label: 'Tue', value: 12, tone: 'accent' },
-        { label: 'Wed', value: 16, tone: 'accent' },
-        { label: 'Thu', value: 10, tone: 'accent' },
-        { label: 'Fri', value: 13, tone: 'accent' },
-        { label: 'Sat', value: 3, tone: 'neutral' },
-        { label: 'Sun', value: 1, tone: 'neutral' }
-      ]
-    }
-  ];
+  filters: DashboardFilter[] = [];
+  stats: StatCardModel[] = [];
+  charts: ChartWidgetModel[] = [];
+  slaItems: SlaItem[] = [];
+  activities: ActivityItem[] = [];
+  notifications: NotificationItem[] = [];
+  tickets: TicketSummaryItem[] = [];
 
-  readonly slaItems: SlaItem[] = [
-    { label: 'Critical', percent: 88, tone: 'amber', meta: '4h response' },
-    { label: 'High', percent: 94, tone: 'green', meta: '8h response' },
-    { label: 'Medium', percent: 98, tone: 'green', meta: '24h response' },
-    { label: 'Low', percent: 100, tone: 'green', meta: '72h response' }
-  ];
-
-  readonly activities: ActivityItem[] = [
-    { actor: 'Priya S.', text: 'assigned to Rahul', ticket: '#HD-1042', time: 'just now', icon: 'person_add', tone: 'blue' },
-    { actor: 'Rahul K.', text: 'resolved', ticket: '#HD-1038', time: '3 min ago', icon: 'check', tone: 'green' },
-    { actor: 'Anita M.', text: 'added an internal note on', ticket: '#HD-1041', time: '7 min ago', icon: 'chat_bubble', tone: 'amber' },
-    { text: 'SLA breach warning for', ticket: '#HD-1035', time: '12 min ago', icon: 'warning', tone: 'red' },
-    { actor: 'Vijay K.', text: 'created new ticket', ticket: '#HD-1043', time: '18 min ago', icon: 'confirmation_number', tone: 'blue' }
-  ];
-
+  // Quick actions are navigational shortcuts, not data — kept static.
   readonly quickActions: DashboardAction[] = [
     { label: 'Create ticket', icon: 'add_circle', tone: 'accent', meta: 'Capture request fast' },
     { label: 'Assign ticket', icon: 'person_add', tone: 'blue', meta: 'Route unowned work' },
@@ -130,19 +85,216 @@ export class DashboardPageComponent {
     { label: 'Manage users', icon: 'manage_accounts', tone: 'amber', meta: 'Roles and access' }
   ];
 
-  readonly notifications: NotificationItem[] = [
-    { title: 'SLA breach risk', description: '#HD-1042 needs attention within 1 hour.', time: 'just now', icon: 'warning', tone: 'red', unread: true },
-    { title: 'Assigned to you', description: '#HD-1041 was assigned by Priya S.', time: '3 min ago', icon: 'assignment_ind', tone: 'blue', unread: true },
-    { title: 'New internal note', description: 'Anita M. commented on #HD-1040.', time: '7 min ago', icon: 'chat_bubble', tone: 'amber', unread: true },
-    { title: 'Resolved', description: '#HD-1038 moved to resolved.', time: '11 min ago', icon: 'check_circle', tone: 'green' }
-  ];
+  constructor() {
+    this.loadDashboard();
+  }
 
-  readonly tickets: TicketSummaryItem[] = [
-    { id: '#1042', title: 'Production server down', priority: 'Critical', priorityTone: 'red', status: 'In progress', statusTone: 'amber', assignee: 'Rahul K.', sla: '1h 12m', slaTone: 'red' },
-    { id: '#1041', title: 'VPN disconnects after Windows update', priority: 'High', priorityTone: 'amber', status: 'Open', statusTone: 'blue', assignee: 'Anita M.', sla: '4h left', slaTone: 'amber' },
-    { id: '#1040', title: 'Email not syncing on Outlook mobile', priority: 'Medium', priorityTone: 'blue', status: 'Open', statusTone: 'blue', assignee: 'Unassigned', sla: '8h left', slaTone: 'green' },
-    { id: '#1039', title: 'CRM access request for sales team', priority: 'Low', priorityTone: 'green', status: 'Resolved', statusTone: 'green', assignee: 'Priya S.', sla: 'Met SLA', slaTone: 'green' }
-  ];
+  get hasData(): boolean {
+    return this.stats.length > 0 || this.tickets.length > 0 || this.charts.length > 0;
+  }
 
-  readonly isLoadingPreview = false;
+  refresh(): void {
+    this.loadDashboard();
+  }
+
+  private loadDashboard(): void {
+    this.isLoading = true;
+    this.error = null;
+
+    forkJoin({
+      stats: this.dashboardApi.getStats().pipe(catchError(() => of(null))),
+      charts: this.dashboardApi.getCharts().pipe(catchError(() => of(null))),
+      activity: this.dashboardApi.getActivity().pipe(catchError(() => of([] as ActivityResponse[]))),
+      recent: this.dashboardApi.getRecentTickets().pipe(catchError(() => of([] as RecentTicketResponse[]))),
+      performance: this.slaApi.getPerformance().pipe(catchError(() => of(null))),
+      overdue: this.slaApi.getOverdue().pipe(catchError(() => of([] as SlaTicketResponse[]))),
+      near: this.slaApi.getNearBreach().pipe(catchError(() => of([] as SlaTicketResponse[])))
+    })
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe((res) => {
+        const everythingFailed =
+          !res.stats && !res.charts && !res.performance && res.activity.length === 0 && res.recent.length === 0;
+
+        if (everythingFailed) {
+          this.error = 'Unable to load dashboard data. Please check your connection and try again.';
+          return;
+        }
+
+        this.stats = this.mapStats(res.stats);
+        this.charts = this.mapCharts(res.charts);
+        this.slaItems = this.mapPerformance(res.performance);
+        this.activities = res.activity.map((item) => this.mapActivity(item));
+        this.tickets = res.recent.map((ticket) => this.mapTicket(ticket));
+        this.notifications = this.buildNotifications(res.overdue, res.near);
+        this.filters = this.buildFilters(res.stats, res.overdue.length + res.near.length);
+      });
+  }
+
+  private mapStats(stats: DashboardStatsResponse | null): StatCardModel[] {
+    if (!stats) {
+      return [];
+    }
+
+    return [
+      { label: 'Open tickets', value: String(stats.openTickets), icon: 'confirmation_number', tone: 'blue', change: `${stats.assignedTickets} assigned`, changeDirection: 'neutral', meta: 'live' },
+      { label: 'In progress', value: String(stats.inProgressTickets), icon: 'sync', tone: 'amber', change: 'Currently being worked', changeDirection: 'neutral', meta: 'active' },
+      { label: 'Resolved', value: String(stats.resolvedTickets), icon: 'check_circle', tone: 'green', change: `${stats.closedTickets} closed`, changeDirection: 'up', meta: 'total' },
+      { label: 'Critical tickets', value: String(stats.criticalTickets), icon: 'local_fire_department', tone: 'red', change: stats.criticalTickets > 0 ? 'Require attention' : 'None open', changeDirection: stats.criticalTickets > 0 ? 'down' : 'neutral', meta: 'p1' },
+      { label: 'SLA breaches', value: String(stats.slaBreaches), icon: 'gpp_maybe', tone: stats.slaBreaches > 0 ? 'red' : 'green', change: stats.slaBreaches > 0 ? 'Needs immediate attention' : 'All within SLA', changeDirection: stats.slaBreaches > 0 ? 'down' : 'up', meta: 'risk' }
+    ];
+  }
+
+  private mapCharts(charts: DashboardChartsResponse | null): ChartWidgetModel[] {
+    if (!charts) {
+      return [];
+    }
+
+    return [
+      {
+        title: 'Tickets by status',
+        subtitle: 'Current',
+        actionLabel: 'Full report',
+        type: 'bar',
+        series: charts.ticketsByStatus.map((point) => ({ label: point.label, value: point.value, tone: this.statusTone(point.label) }))
+      },
+      {
+        title: 'Priority distribution',
+        subtitle: 'Current queue',
+        actionLabel: 'Drill in',
+        type: 'donut',
+        series: charts.ticketsByPriority.map((point) => ({ label: point.label, value: point.value, tone: this.priorityTone(point.label) }))
+      },
+      {
+        title: 'Weekly ticket trend',
+        subtitle: '7-day volume',
+        type: 'line',
+        series: charts.weeklyTrend.map((point) => ({ label: point.label, value: point.value, tone: 'accent' as DashboardTone }))
+      }
+    ];
+  }
+
+  private mapPerformance(performance: SlaPerformanceResponse | null): SlaItem[] {
+    if (!performance) {
+      return [];
+    }
+
+    const total = performance.totalEvaluated || 1;
+    const pct = (value: number): number => Math.round((value / total) * 100);
+
+    return [
+      { label: 'Compliance', percent: Math.round(performance.compliancePercent), tone: performance.compliancePercent >= 90 ? 'green' : performance.compliancePercent >= 75 ? 'amber' : 'red', meta: `${performance.windowDays}-day window` },
+      { label: 'On track', percent: pct(performance.onTrack), tone: 'green', meta: `${performance.onTrack} tickets` },
+      { label: 'At risk', percent: pct(performance.atRisk), tone: 'amber', meta: `${performance.atRisk} tickets` },
+      { label: 'Breached', percent: pct(performance.breached), tone: 'red', meta: `${performance.breached} tickets` }
+    ];
+  }
+
+  private mapActivity(item: ActivityResponse): ActivityItem {
+    return {
+      actor: item.userName || undefined,
+      text: item.description,
+      ticket: item.ticketNumber ? `#${item.ticketNumber}` : undefined,
+      time: this.relativeTime(item.timestamp),
+      icon: this.activityIcon(item.activityType),
+      tone: this.activityTone(item.activityType)
+    };
+  }
+
+  private mapTicket(ticket: RecentTicketResponse): TicketSummaryItem {
+    const closed = /resolved|closed/i.test(ticket.status);
+    return {
+      id: `#${ticket.ticketNumber}`,
+      title: ticket.title,
+      priority: ticket.priority,
+      priorityTone: this.priorityTone(ticket.priority),
+      status: ticket.status,
+      statusTone: this.statusTone(ticket.status),
+      assignee: ticket.assignee ?? 'Unassigned',
+      sla: closed ? 'Met' : 'Active',
+      slaTone: closed ? 'green' : 'neutral'
+    };
+  }
+
+  private buildNotifications(overdue: SlaTicketResponse[], near: SlaTicketResponse[]): NotificationItem[] {
+    const breaches = overdue.slice(0, 4).map((ticket): NotificationItem => ({
+      title: 'SLA breach',
+      description: `${ticket.ticketNumber} · ${ticket.title} is overdue`,
+      time: `${Math.abs(Math.round(ticket.remainingMinutes))}m over`,
+      icon: 'gpp_bad',
+      tone: 'red',
+      unread: true
+    }));
+
+    const warnings = near.slice(0, 4).map((ticket): NotificationItem => ({
+      title: 'SLA warning',
+      description: `${ticket.ticketNumber} · ${ticket.title} nearing SLA`,
+      time: `${Math.max(0, Math.round(ticket.remainingMinutes))}m left`,
+      icon: 'warning',
+      tone: 'amber',
+      unread: true
+    }));
+
+    return [...breaches, ...warnings].slice(0, 6);
+  }
+
+  private buildFilters(stats: DashboardStatsResponse | null, slaRisk: number): DashboardFilter[] {
+    return [
+      { label: 'All work', count: stats?.totalTickets ?? 0, active: true },
+      { label: 'Open', count: stats?.openTickets, icon: 'inbox' },
+      { label: 'SLA risk', count: slaRisk, icon: 'warning' },
+      { label: 'Critical', count: stats?.criticalTickets, icon: 'local_fire_department' },
+      { label: 'Resolved', count: stats?.resolvedTickets, icon: 'task_alt' }
+    ];
+  }
+
+  private statusTone(status = ''): DashboardTone {
+    const value = status.toLowerCase();
+    if (value.includes('resolved') || value.includes('closed')) return 'green';
+    if (value.includes('progress')) return 'amber';
+    if (value.includes('assigned')) return 'purple';
+    if (value.includes('hold')) return 'neutral';
+    return 'blue';
+  }
+
+  private priorityTone(priority = ''): DashboardTone {
+    const value = priority.toLowerCase();
+    if (value.includes('critical')) return 'red';
+    if (value.includes('high')) return 'amber';
+    if (value.includes('low')) return 'green';
+    return 'blue';
+  }
+
+  private activityIcon(type = ''): string {
+    const value = type.toLowerCase();
+    if (value.includes('created')) return 'confirmation_number';
+    if (value.includes('assigned')) return 'person_add';
+    if (value.includes('status')) return 'sync';
+    if (value.includes('comment')) return 'chat_bubble';
+    if (value.includes('attachment')) return 'attach_file';
+    return 'bolt';
+  }
+
+  private activityTone(type = ''): DashboardTone {
+    const value = type.toLowerCase();
+    if (value.includes('created') || value.includes('assigned')) return 'blue';
+    if (value.includes('status')) return 'green';
+    if (value.includes('comment')) return 'amber';
+    if (value.includes('attachment')) return 'purple';
+    return 'neutral';
+  }
+
+  private relativeTime(timestamp: string): string {
+    const then = new Date(timestamp).getTime();
+    if (Number.isNaN(then)) return '';
+    const diffSec = Math.max(0, Math.round((Date.now() - then) / 1000));
+    if (diffSec < 60) return 'just now';
+    const diffMin = Math.round(diffSec / 60);
+    if (diffMin < 60) return `${diffMin} min ago`;
+    const diffHr = Math.round(diffMin / 60);
+    if (diffHr < 24) return `${diffHr}h ago`;
+    return `${Math.round(diffHr / 24)}d ago`;
+  }
 }

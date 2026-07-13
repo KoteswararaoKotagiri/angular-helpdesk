@@ -23,7 +23,10 @@ interface JwtPayload {
 })
 export class AuthService {
   private readonly tokenKey = 'helpdesk.auth.token';
-  private readonly authStateSubject = new BehaviorSubject<boolean>(this.hasValidToken());
+  // Start false; the constructor calls restoreSession() to set the real state once
+  // injected dependencies (storage) are available. Referencing this.storage in a field
+  // initializer would run before the constructor assigns it (ES2022 class-field semantics).
+  private readonly authStateSubject = new BehaviorSubject<boolean>(false);
 
   readonly isAuthenticated$ = this.authStateSubject.asObservable();
 

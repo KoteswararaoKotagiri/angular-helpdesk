@@ -1,9 +1,36 @@
-<app-admin-header
-  title="Department management"
-  subtitle="Model service ownership, department routing, category coverage, and active or inactive administration boundaries."
-  [metrics]="metrics"
-  primaryAction="Create department"
-  secondaryAction="Export departments"
-/>
-<app-admin-filter-toolbar placeholder="Search departments, owners, or SLA policies" [filters]="filters" resultLabel="5 departments shown" />
-<app-admin-department-table [departments]="departments" />
+<section class="departments-page">
+  <header class="departments-page__header">
+    <div>
+      <h1>Department management</h1>
+      <p>Departments defined in the system and how many users belong to each.</p>
+    </div>
+    <div class="departments-page__stat" *ngIf="!isLoading && !error">{{ departments.length }} departments</div>
+  </header>
+
+  <div class="departments-loading" *ngIf="isLoading"><mat-spinner [diameter]="32"></mat-spinner></div>
+
+  <div class="departments-error" *ngIf="error && !isLoading">
+    <mat-icon>error_outline</mat-icon><span>{{ error }}</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div class="departments-empty" *ngIf="departments.length === 0">
+      <mat-icon>business</mat-icon>
+      <strong>No departments found</strong>
+    </div>
+
+    <div class="departments-table" *ngIf="departments.length">
+      <div class="departments-table__head">
+        <span>Department</span>
+        <span>Assigned users</span>
+      </div>
+      <div class="departments-table__row" *ngFor="let department of departments">
+        <span class="department-cell">
+          <mat-icon>business</mat-icon>
+          <strong>{{ department.name }}</strong>
+        </span>
+        <span>{{ department.userCount }}</span>
+      </div>
+    </div>
+  </ng-container>
+</section>

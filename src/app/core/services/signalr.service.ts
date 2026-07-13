@@ -6,9 +6,11 @@ import { NotificationApi, RealtimeNotification } from '../../api/notification.ap
   providedIn: 'root'
 })
 export class SignalrService {
-  readonly notifications$: Observable<RealtimeNotification> = this.notificationApi.notifications$;
-
   constructor(private readonly notificationApi: NotificationApi) {}
+
+  get notifications$(): Observable<RealtimeNotification> {
+    return this.notificationApi.notifications$;
+  }
 
   start(): Promise<void> {
     return this.notificationApi.start();

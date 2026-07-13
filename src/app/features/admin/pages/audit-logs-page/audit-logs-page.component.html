@@ -1,9 +1,108 @@
-<app-admin-header
-  title="Audit logs"
-  subtitle="Searchable compliance evidence for user actions, configuration changes, login history, and ticket administration activity."
-  [metrics]="metrics"
-  primaryAction="Create export"
-  secondaryAction="Retention policy"
-/>
-<app-admin-filter-toolbar placeholder="Search actor, action, target, category, or IP address" [filters]="filters" resultLabel="5 latest events" />
-<app-admin-audit-log-table [logs]="logs" />
+<section class="audit-page">
+  <header class="audit-page__header">
+    <div>
+      <h1>Audit logs</h1>
+      <p>Chronological activity timeline across the system. Newest first.</p>
+    </div>
+    <div class="audit-page__stat">{{ totalCount }} events</div>
+  </header>
+
+  <div class="audit-page__filters">
+    <mat-form-field appearance="outline" class="grow">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Action, entity, changes…" [ngModel]="search" (ngModelChange)="onSearch($event)" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>User</mat-label>
+      <mat-select [(ngModel)]="userId" (selectionChange)="applyFilters()">
+        <mat-option [value]="undefined">All users</mat-option>
+        <mat-option *ngFor="let user of users" [value]="user.id">{{ user.fullName }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Entity</mat-label>
+      <mat-select [(ngModel)]="entityName" (selectionChange)="applyFilters()">
+        <mat-option [value]="undefined">All entities</mat-option>
+        <mat-option *ngFor="let entity of entityOptions" [value]="entity">{{ entity }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Action</mat-label>
+      <input matInput [(ngModel)]="action" (change)="applyFilters()" placeholder="e.g. Comment Added" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>From</mat-label>
+      <input matInput type="date" [(ngModel)]="fromDate" (change)="applyFilters()" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>To</mat-label>
+      <input matInput type="date" [(ngModel)]="toDate" (change)="applyFilters()" />
+    </mat-form-field>
+  </div>
+
+  <div class="audit-error" *ngIf="error && !isLoading">
+    <mat-icon>error_outline</mat-icon><span>{{ error }}</span>
+    <button mat-button color="primary" (click)="applyFilters()">Retry</button>
+  </div>
+
+  <div class="audit-loading" *ngIf="isLoading"><mat-spinner [diameter]="32"></mat-spinner></div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div class="audit-empty" *ngIf="logs.length === 0">
+      <mat-icon>history</mat-icon>
+      <strong>No audit events</strong>
+      <span>Try adjusting your filters or date range.</span>
+    </div>
+
+    <ul class="timeline" *ngIf="logs.length">
+      <li class="timeline__item" *ngFor="let log of logs">
+        <div class="timeline__row" (click)="toggle(log.id)">
+          <span class="dot" [ngClass]="'tone-' + actionTone(log.action)"></span>
+          <div class="timeline__body">
+            <div class="timeline__title">
+              <em class="badge" [ngClass]="'tone-' + actionTone(log.action)">{{ log.action }}</em>
+              <span class="entity">{{ log.entityName }}</span>
+            </div>
+            <div class="timeline__meta">
+              <span>{{ log.userName || 'System' }}</span>
+              <span>·</span>
+              <span>{{ log.createdOn | date: 'medium' }}</span>
+              <span *ngIf="log.ipAddress">· {{ log.ipAddress }}</span>
+            </div>
+          </div>
+          <mat-icon class="chevron">{{ isExpanded(log.id) ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </div>
+
+        <div class="timeline__detail" *ngIf="isExpanded(log.id)">
+          <div class="value-block">
+            <span class="value-label">Old value</span>
+            <pre>{{ log.oldValue || '—' }}</pre>
+          </div>
+          <div class="value-block">
+            <span class="value-label">New value</span>
+            <pre>{{ log.newValue || '—' }}</pre>
+          </div>
+          <div class="value-block">
+            <span class="value-label">Entity id</span>
+            <pre>{{ log.entityId }}</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <mat-paginator
+      *ngIf="totalCount > 0"
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="pageNumber - 1"
+      [pageSizeOptions]="[20, 50, 100]"
+      (page)="onPage($event)"
+    ></mat-paginator>
+  </ng-container>
+</section>

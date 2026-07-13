@@ -1,0 +1,43 @@
+<section class="jobs-page">
+  <header class="jobs-page__header">
+    <div>
+      <h1>Background jobs</h1>
+      <p>Hangfire runs scheduled and recurring jobs. Live status, failed jobs, history and details are in the Hangfire dashboard.</p>
+    </div>
+    <button mat-flat-button color="primary" type="button" (click)="openDashboard()">
+      <mat-icon>open_in_new</mat-icon> Open Hangfire dashboard
+    </button>
+  </header>
+
+  <div class="notice">
+    <mat-icon>info</mat-icon>
+    <div>
+      <strong>Live job data lives in the Hangfire dashboard</strong>
+      <span>
+        Scheduled jobs, recurring jobs, failed jobs, job history and job details are served by Hangfire at
+        <code>{{ dashboardUrl }}</code>. The dashboard is Admin-only in production.
+      </span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Recurring jobs</h2>
+    <div class="jobs-table">
+      <div class="jobs-table__head">
+        <span>Job</span>
+        <span>Schedule</span>
+        <span>Queue</span>
+        <span>Type</span>
+      </div>
+      <div class="jobs-table__row" *ngFor="let job of recurringJobs">
+        <span class="job-cell">
+          <strong>{{ job.name }}</strong>
+          <small>{{ job.description }}</small>
+        </span>
+        <span>{{ job.schedule }}</span>
+        <span><em class="badge tone-neutral">{{ job.queue }}</em></span>
+        <span><em class="badge tone-blue">Recurring</em></span>
+      </div>
+    </div>
+  </div>
+</section>

@@ -25,20 +25,22 @@ export class SidebarComponent {
 
   readonly primaryNavItems: SidebarNavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
-    { label: 'Tickets', icon: 'confirmation_number', route: '/tickets', badge: '12' },
-    { label: 'Analytics', icon: 'bar_chart', route: '/dashboard' }
+    { label: 'Tickets', icon: 'confirmation_number', route: '/tickets' },
+    { label: 'SLA', icon: 'schedule', route: '/sla' }
   ];
 
   readonly workNavItems: SidebarNavItem[] = [
-    { label: 'Assigned to me', icon: 'assignment_ind', route: '/tickets', badge: '4' },
-    { label: 'Starred', icon: 'star', route: '/tickets' },
-    { label: 'SLA at risk', icon: 'schedule', route: '/tickets', badge: '3' }
+    { label: 'Assigned to me', icon: 'assignment_ind', route: '/tickets' },
+    { label: 'SLA at risk', icon: 'warning', route: '/sla' },
+    { label: 'My profile', icon: 'account_circle', route: '/profile' }
   ];
 
   readonly managementNavItems: SidebarNavItem[] = [
     { label: 'Admin panel', icon: 'settings', route: '/admin/dashboard' },
-    { label: 'Users', icon: 'group', route: '/admin/users', badge: '248', neutral: true },
+    { label: 'Users', icon: 'group', route: '/admin/users' },
     { label: 'Departments', icon: 'business', route: '/admin/departments' },
-    { label: 'Audit logs', icon: 'description', route: '/admin/audit-logs' }
+    { label: 'Audit logs', icon: 'description', route: '/admin/audit-logs' },
+    { label: 'Email settings', icon: 'mail', route: '/admin/settings' },
+    { label: 'Background jobs', icon: 'schedule_send', route: '/admin/jobs' }
   ];
 }

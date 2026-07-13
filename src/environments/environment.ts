@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'https://localhost:5001',
-  apiBaseUrl: 'https://localhost:5001',
-  signalrHubUrl: 'https://localhost:5001/hubs/notifications'
+  apiUrl: 'http://localhost:49289',
+  apiBaseUrl: 'http://localhost:49289',
+  signalrHubUrl: 'http://localhost:49289/hubs/notifications'
 } as const;

@@ -1,0 +1,70 @@
+<section class="sla-page">
+  <header class="sla-page__header">
+    <div>
+      <h1>SLA management</h1>
+      <p>Monitor SLA compliance, countdowns, overdue tickets, and breach alerts.</p>
+    </div>
+    <button mat-stroked-button type="button" (click)="refresh()" [disabled]="isLoading">
+      <mat-icon>refresh</mat-icon> Refresh
+    </button>
+  </header>
+
+  <div class="sla-loading" *ngIf="isLoading"><mat-spinner [diameter]="32"></mat-spinner></div>
+
+  <div class="sla-error" *ngIf="error && !isLoading">
+    <mat-icon>error_outline</mat-icon><span>{{ error }}</span>
+    <button mat-button color="primary" (click)="refresh()">Try again</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div class="metrics" *ngIf="metrics.length">
+      <div class="metric" *ngFor="let metric of metrics">
+        <span class="metric__label">{{ metric.label }}</span>
+        <span class="metric__value" [ngClass]="'tone-text-' + metric.tone">{{ metric.value }}</span>
+      </div>
+    </div>
+
+    <mat-tab-group>
+      <mat-tab [label]="'SLA countdown (' + countdown.length + ')'">
+        <ng-container *ngTemplateOutlet="ticketList; context: { $implicit: countdown, empty: 'No open tickets under SLA.' }"></ng-container>
+      </mat-tab>
+      <mat-tab [label]="'Overdue (' + overdue.length + ')'">
+        <ng-container *ngTemplateOutlet="ticketList; context: { $implicit: overdue, empty: 'No overdue tickets.' }"></ng-container>
+      </mat-tab>
+      <mat-tab [label]="'Breaches (' + breaches.length + ')'">
+        <ng-container *ngTemplateOutlet="ticketList; context: { $implicit: breaches, empty: 'No SLA breaches.' }"></ng-container>
+      </mat-tab>
+      <mat-tab [label]="'At risk (' + nearBreach.length + ')'">
+        <ng-container *ngTemplateOutlet="ticketList; context: { $implicit: nearBreach, empty: 'No tickets approaching SLA.' }"></ng-container>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-container>
+</section>
+
+<ng-template #ticketList let-tickets let-empty="empty">
+  <div class="sla-empty" *ngIf="tickets.length === 0">
+    <mat-icon>verified</mat-icon><span>{{ empty }}</span>
+  </div>
+
+  <div class="sla-table" *ngIf="tickets.length">
+    <div class="sla-table__head">
+      <span>Ticket</span>
+      <span>Priority</span>
+      <span>Assignee</span>
+      <span>SLA status</span>
+      <span>Remaining</span>
+      <span>Escalation</span>
+    </div>
+    <div class="sla-table__row" *ngFor="let ticket of tickets">
+      <span class="ticket-cell"><strong>{{ ticket.ticketNumber }}</strong> {{ ticket.title }}</span>
+      <span>{{ ticket.priority }}</span>
+      <span>{{ ticket.assignee }}</span>
+      <span><em class="badge" [ngClass]="'tone-' + slaTone(ticket.slaStatus)">{{ ticket.slaStatus }}</em></span>
+      <b [ngClass]="ticket.isOverdue ? 'tone-text-red' : 'tone-text-neutral'">{{ formatRemaining(ticket.remainingMinutes) }}</b>
+      <span>
+        <em *ngIf="ticket.escalationLevel > 0" class="badge tone-amber">Level {{ ticket.escalationLevel }}</em>
+        <span *ngIf="ticket.escalationLevel === 0" class="muted">—</span>
+      </span>
+    </div>
+  </div>
+</ng-template>

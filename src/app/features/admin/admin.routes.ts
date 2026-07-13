@@ -42,6 +42,10 @@ export const ADMIN_ROUTES: Routes = [
         path: 'audit-logs',
         loadComponent: () =>
           import('./pages/audit-logs-page/audit-logs-page.component').then((m) => m.AuditLogsPageComponent)
+      },
+      {
+        path: 'jobs',
+        loadComponent: () => import('./pages/jobs-page/jobs-page.component').then((m) => m.JobsPageComponent)
       }
     ]
   }

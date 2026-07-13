@@ -1,0 +1,96 @@
+:host { display: block; }
+
+.sla-page__header {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.sla-page__header h1 { font-size: 20px; font-weight: 600; margin: 0; }
+.sla-page__header p { color: var(--text3); font-size: 13px; margin: 4px 0 0; }
+
+.sla-loading { display: flex; justify-content: center; padding: 40px; }
+.sla-error {
+  align-items: center;
+  background: var(--red-bg);
+  border-radius: 10px;
+  color: var(--red-text);
+  display: flex;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(5, minmax(120px, 1fr));
+  margin-bottom: 16px;
+}
+.metric {
+  background: var(--surface, #fff);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+}
+.metric__label { color: var(--text3); font-size: 12px; }
+.metric__value { font-size: 22px; font-weight: 700; }
+
+.sla-empty {
+  align-items: center;
+  color: var(--text3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 40px 16px;
+}
+
+.sla-table { min-width: 0; overflow-x: auto; padding-top: 12px; }
+.sla-table__head,
+.sla-table__row {
+  align-items: center;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(240px, 2fr) 90px 130px 110px 130px 100px;
+  min-width: 820px;
+}
+.sla-table__head {
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text3);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 0 8px 10px;
+  text-transform: uppercase;
+}
+.sla-table__row {
+  border-bottom: 0.5px solid var(--border);
+  color: var(--text2);
+  font-size: 13px;
+  padding: 10px 8px;
+}
+.ticket-cell strong { color: var(--text3); margin-right: 6px; }
+.muted { color: var(--text3); }
+
+.badge {
+  border-radius: 6px;
+  display: inline-flex;
+  font-size: 11.5px;
+  font-style: normal;
+  font-weight: 600;
+  padding: 4px 8px;
+}
+.tone-green { background: var(--green-bg); color: var(--green-text); }
+.tone-amber { background: var(--amber-bg); color: var(--amber-text); }
+.tone-red { background: var(--red-bg); color: var(--red-text); }
+.tone-neutral { background: var(--surface2); color: var(--text2); }
+.tone-text-green { color: var(--green); }
+.tone-text-amber { color: var(--amber); }
+.tone-text-red { color: var(--red); }
+.tone-text-neutral { color: var(--text2); }
+
+@media (max-width: 900px) {
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+}

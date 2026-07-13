@@ -1,0 +1,70 @@
+<section class="profile-page">
+  <header class="profile-page__header">
+    <h1>My profile</h1>
+    <p>Manage your personal information and password.</p>
+  </header>
+
+  <div class="profile-loading" *ngIf="isLoading"><mat-spinner [diameter]="32"></mat-spinner></div>
+
+  <div class="profile-error" *ngIf="loadError && !isLoading">
+    <mat-icon>error_outline</mat-icon><span>{{ loadError }}</span>
+  </div>
+
+  <div class="profile-grid" *ngIf="profile && !isLoading">
+    <div class="card">
+      <h2>Personal information</h2>
+      <form (ngSubmit)="saveProfile()" #pform="ngForm" class="form">
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput name="firstName" [(ngModel)]="profile.firstName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput name="lastName" [(ngModel)]="profile.lastName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" name="email" [(ngModel)]="profile.email" required email />
+        </mat-form-field>
+
+        <dl class="meta">
+          <div><dt>Role</dt><dd>{{ profile.roleName }}</dd></div>
+          <div><dt>Department</dt><dd>{{ profile.departmentName }}</dd></div>
+          <div><dt>Status</dt><dd>{{ profile.isActive ? 'Active' : 'Inactive' }}</dd></div>
+        </dl>
+
+        <p class="ok" *ngIf="profileMessage">{{ profileMessage }}</p>
+        <p class="err" *ngIf="profileError">{{ profileError }}</p>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="pform.invalid || savingProfile">
+          {{ savingProfile ? 'Saving…' : 'Save profile' }}
+        </button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>Change password</h2>
+      <form (ngSubmit)="changePassword()" #passForm="ngForm" class="form">
+        <mat-form-field appearance="outline">
+          <mat-label>Current password</mat-label>
+          <input matInput type="password" name="currentPassword" [(ngModel)]="currentPassword" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>New password</mat-label>
+          <input matInput type="password" name="newPassword" [(ngModel)]="newPassword" required minlength="6" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirm new password</mat-label>
+          <input matInput type="password" name="confirmPassword" [(ngModel)]="confirmPassword" required />
+        </mat-form-field>
+
+        <p class="ok" *ngIf="passwordMessage">{{ passwordMessage }}</p>
+        <p class="err" *ngIf="passwordError">{{ passwordError }}</p>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="passForm.invalid || savingPassword">
+          {{ savingPassword ? 'Updating…' : 'Change password' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>

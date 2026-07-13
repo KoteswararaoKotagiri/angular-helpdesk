@@ -1,13 +1,66 @@
-<app-admin-header
-  title="Ticket configuration and system settings"
-  subtitle="Shape operational workflows, SLA behavior, notifications, integrations, AI readiness, and platform-level defaults."
-  [metrics]="metrics"
-  primaryAction="New configuration"
-  secondaryAction="Change history"
-/>
+<section class="settings-page">
+  <header class="settings-page__header">
+    <h1>Email notifications</h1>
+    <p>Outbound email configuration and notification event settings.</p>
+  </header>
 
-<section class="config-grid">
-  <app-admin-configuration-card *ngFor="let item of configuration" [item]="item" />
+  <div class="notice">
+    <mat-icon>info</mat-icon>
+    <div>
+      <strong>Managed by server configuration</strong>
+      <span>
+        Email provider credentials and toggles are configured on the server (<code>appsettings.json</code> →
+        <code>EmailSettings</code>) and via environment variables. No credentials are stored in the UI.
+      </span>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+    <div class="card">
+      <h2>Provider</h2>
+      <dl class="fields">
+        <div><dt>Provider</dt><dd>SMTP / SendGrid (configurable)</dd></div>
+        <div><dt>Status</dt><dd><em class="badge tone-neutral">Set via <code>EmailSettings:Enabled</code></em></dd></div>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h2>SMTP</h2>
+      <dl class="fields">
+        <div><dt>Host</dt><dd><code>EmailSettings:Smtp:Host</code></dd></div>
+        <div><dt>Port</dt><dd><code>EmailSettings:Smtp:Port</code></dd></div>
+        <div><dt>Username</dt><dd><code>EmailSettings:Smtp:Username</code></dd></div>
+        <div><dt>Password</dt><dd>Secret (env / user-secrets)</dd></div>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h2>SendGrid</h2>
+      <dl class="fields">
+        <div><dt>API key</dt><dd>Secret (env / user-secrets)</dd></div>
+      </dl>
+    </div>
+
+    <div class="card">
+      <h2>Sender identity</h2>
+      <dl class="fields">
+        <div><dt>From email</dt><dd><code>EmailSettings:FromEmail</code></dd></div>
+        <div><dt>From name</dt><dd><code>EmailSettings:FromName</code></dd></div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Notification events</h2>
+    <p class="muted">Automated emails are sent for the following ticket events when notifications are enabled.</p>
+    <ul class="events">
+      <li *ngFor="let event of notificationEvents">
+        <div class="events__text">
+          <strong>{{ event.name }}</strong>
+          <span>{{ event.description }}</span>
+        </div>
+        <mat-slide-toggle [checked]="event.enabled" disabled></mat-slide-toggle>
+      </li>
+    </ul>
+  </div>
 </section>
-
-<app-admin-settings-panel [sections]="sections" />

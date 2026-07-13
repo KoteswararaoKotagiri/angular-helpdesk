@@ -1,10 +1,119 @@
-<app-admin-header
-  title="User management"
-  subtitle="Provision users, assign roles, manage department ownership, and safely operate at bulk scale."
-  [metrics]="metrics"
-  primaryAction="Create user"
-  secondaryAction="Import users"
-/>
-<app-admin-filter-toolbar placeholder="Search users by name, email, role, or department" [filters]="filters" resultLabel="Showing 6 of 248" />
-<app-admin-bulk-actions-bar [selectedCount]="selectedCount" context="users" />
-<app-admin-user-table [users]="users" />
+<section class="users-page">
+  <header class="users-page__header">
+    <div>
+      <h1>User management</h1>
+      <p>Provision users, assign roles and departments, and manage access.</p>
+    </div>
+    <div class="users-page__stat">{{ totalCount }} users</div>
+  </header>
+
+  <div class="users-page__filters">
+    <mat-form-field appearance="outline" class="grow">
+      <mat-label>Search</mat-label>
+      <input matInput placeholder="Name, email…" [ngModel]="search" (ngModelChange)="onSearch($event)" />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Role</mat-label>
+      <mat-select [(ngModel)]="roleId" (selectionChange)="applyFilters()">
+        <mat-option [value]="undefined">All roles</mat-option>
+        <mat-option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Department</mat-label>
+      <mat-select [(ngModel)]="departmentId" (selectionChange)="applyFilters()">
+        <mat-option [value]="undefined">All departments</mat-option>
+        <mat-option *ngFor="let dept of departments" [value]="dept.id">{{ dept.name }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="activeFilter" (selectionChange)="applyFilters()">
+        <mat-option value="all">All</mat-option>
+        <mat-option value="active">Active</mat-option>
+        <mat-option value="inactive">Inactive</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Sort by</mat-label>
+      <mat-select [(ngModel)]="sortBy" (selectionChange)="applyFilters()">
+        <mat-option value="createdDate">Created date</mat-option>
+        <mat-option value="name">Name</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-icon-button type="button" (click)="toggleSort()" [matTooltip]="sortDescending ? 'Descending' : 'Ascending'">
+      <mat-icon>{{ sortDescending ? 'arrow_downward' : 'arrow_upward' }}</mat-icon>
+    </button>
+  </div>
+
+  <div class="users-error" *ngIf="error && !isLoading">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error }}</span>
+    <button mat-button color="primary" (click)="applyFilters()">Retry</button>
+  </div>
+
+  <div class="users-loading" *ngIf="isLoading">
+    <mat-spinner [diameter]="32"></mat-spinner>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div class="users-empty" *ngIf="users.length === 0">
+      <mat-icon>group_off</mat-icon>
+      <strong>No users found</strong>
+      <span>Try adjusting your search or filters.</span>
+    </div>
+
+    <div class="user-table" *ngIf="users.length">
+      <div class="user-table__head">
+        <span>User</span>
+        <span>Role</span>
+        <span>Department</span>
+        <span>Status</span>
+        <span></span>
+      </div>
+      <div class="user-table__row" *ngFor="let user of users">
+        <span class="user-cell">
+          <span class="avatar">{{ initials(user.fullName) }}</span>
+          <span class="user-cell__text">
+            <strong>{{ user.fullName }}</strong>
+            <small>{{ user.email }}</small>
+          </span>
+        </span>
+        <span>{{ user.role }}</span>
+        <span>{{ user.department }}</span>
+        <span>
+          <em class="badge" [ngClass]="user.isActive ? 'tone-green' : 'tone-neutral'">
+            {{ user.isActive ? 'Active' : 'Inactive' }}
+          </em>
+        </span>
+        <span class="actions">
+          <button mat-icon-button [matMenuTriggerFor]="menu"><mat-icon>more_vert</mat-icon></button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="edit(user)">
+              <mat-icon>edit</mat-icon><span>Edit / role / department</span>
+            </button>
+            <button mat-menu-item (click)="toggleActive(user)">
+              <mat-icon>{{ user.isActive ? 'block' : 'check_circle' }}</mat-icon>
+              <span>{{ user.isActive ? 'Deactivate' : 'Activate' }}</span>
+            </button>
+          </mat-menu>
+        </span>
+      </div>
+    </div>
+
+    <mat-paginator
+      *ngIf="totalCount > 0"
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="pageNumber - 1"
+      [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPage($event)"
+    ></mat-paginator>
+  </ng-container>
+</section>

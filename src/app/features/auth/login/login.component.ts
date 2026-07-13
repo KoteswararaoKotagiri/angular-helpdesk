@@ -24,8 +24,8 @@ export class LoginComponent {
   private readonly authService = inject(AuthService);
   private readonly errorHandler = inject(ErrorHandlerService);
 
-  email = 'admin@helpdesk.com';
-  password = 'password';
+  email = '';
+  password = '';
   isSubmitting = false;
   errorMessage = '';
 

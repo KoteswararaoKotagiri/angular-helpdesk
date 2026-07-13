@@ -92,7 +92,7 @@ export class TicketDetailsPageComponent {
 
   private loadTicket(): void {
     this.ticketApi
-      .getTickets({ search: this.apiTicketId, pageNumber: 1, pageSize: 20 })
+      .getTickets({ search: String(this.apiTicketId), pageNumber: 1, pageSize: 20 })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response) => {
         const ticket = response.items.find((item) => String(item.id) === this.apiTicketId || item.ticketNumber === this.apiTicketId) ?? response.items[0];

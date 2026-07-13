@@ -1,9 +1,38 @@
-<app-admin-header
-  title="Role management"
-  subtitle="Design role hierarchy, clarify ownership, and keep administrative access understandable at enterprise scale."
-  [metrics]="metrics"
-  primaryAction="Create role"
-  secondaryAction="Access review"
-/>
-<app-admin-filter-toolbar placeholder="Search roles by name, tier, or responsibility" [filters]="filters" resultLabel="8 roles" />
-<app-admin-role-table [roles]="roles" />
+<section class="roles-page">
+  <header class="roles-page__header">
+    <div>
+      <h1>Role management</h1>
+      <p>Roles defined in the system and how many users are assigned to each.</p>
+    </div>
+    <div class="roles-page__stat" *ngIf="!isLoading && !error">{{ roles.length }} roles</div>
+  </header>
+
+  <div class="roles-loading" *ngIf="isLoading"><mat-spinner [diameter]="32"></mat-spinner></div>
+
+  <div class="roles-error" *ngIf="error && !isLoading">
+    <mat-icon>error_outline</mat-icon><span>{{ error }}</span>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !error">
+    <div class="roles-empty" *ngIf="roles.length === 0">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <strong>No roles found</strong>
+    </div>
+
+    <div class="roles-table" *ngIf="roles.length">
+      <div class="roles-table__head">
+        <span>Role</span>
+        <span>Code</span>
+        <span>Assigned users</span>
+      </div>
+      <div class="roles-table__row" *ngFor="let role of roles">
+        <span class="role-cell">
+          <mat-icon>badge</mat-icon>
+          <strong>{{ role.name }}</strong>
+        </span>
+        <span><em class="badge tone-neutral">{{ role.code }}</em></span>
+        <span>{{ role.userCount }}</span>
+      </div>
+    </div>
+  </ng-container>
+</section>

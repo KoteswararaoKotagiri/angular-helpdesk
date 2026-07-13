@@ -1,67 +1,60 @@
+import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { catchError, finalize, forkJoin, map, of, switchMap } from 'rxjs';
 import { MasterApi } from '../../../../api/master.api';
-import { RoleDto } from '../../../../api/dtos';
-import { AdminMetric, FilterOption, RoleRow } from '../../models/admin.models';
-import { AdminHeaderComponent } from '../../ui/admin-header/admin-header.component';
-import { FilterToolbarComponent } from '../../ui/filter-toolbar/filter-toolbar.component';
-import { RoleTableComponent } from '../../ui/role-table/role-table.component';
+import { UserApi } from '../../../../api/user.api';
+import { ErrorHandlerService } from '../../../../core/services/error-handler.service';
+
+interface RoleView {
+  id: string;
+  name: string;
+  code: string;
+  userCount: number;
+}
 
 @Component({
   selector: 'app-roles-page',
   standalone: true,
-  imports: [AdminHeaderComponent, FilterToolbarComponent, RoleTableComponent],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './roles-page.component.html',
   styleUrl: './roles-page.component.scss'
 })
 export class RolesPageComponent {
   private readonly masterApi = inject(MasterApi);
+  private readonly userApi = inject(UserApi);
+  private readonly errorHandler = inject(ErrorHandlerService);
   private readonly destroyRef = inject(DestroyRef);
 
-  metrics: AdminMetric[] = [
-    { label: 'Roles', value: '0', icon: 'admin_panel_settings', tone: 'purple', meta: 'Loaded from API' },
-    { label: 'Assigned users', value: '0', icon: 'group', tone: 'blue', meta: 'Loaded from API' },
-    { label: 'System roles', value: '0', icon: 'shield', tone: 'amber', meta: 'Loaded from API' },
-    { label: 'Custom roles', value: '0', icon: 'extension', tone: 'green', meta: 'Loaded from API' }
-  ];
-
-  filters: FilterOption[] = [
-    { label: 'All roles', count: 0, active: true },
-    { label: 'System', count: 0 },
-    { label: 'Custom', count: 0 }
-  ];
-
-  roles: RoleRow[] = [];
+  roles: RoleView[] = [];
+  isLoading = true;
+  error: string | null = null;
 
   constructor() {
-    this.masterApi.getRoles().pipe(takeUntilDestroyed(this.destroyRef)).subscribe((roles) => {
-      const systemCount = roles.filter((role) => role.isSystemRole).length;
-      const assignedUsers = roles.reduce((total, role) => total + (role.userCount ?? 0), 0);
-      this.roles = roles.map((role, index) => this.mapRole(role, index));
-      this.metrics = [
-        { label: 'Roles', value: String(roles.length), icon: 'admin_panel_settings', tone: 'purple', meta: 'Loaded from API' },
-        { label: 'Assigned users', value: String(assignedUsers), icon: 'group', tone: 'blue', meta: 'Loaded from API' },
-        { label: 'System roles', value: String(systemCount), icon: 'shield', tone: 'amber', meta: 'Loaded from API' },
-        { label: 'Custom roles', value: String(roles.length - systemCount), icon: 'extension', tone: 'green', meta: 'Loaded from API' }
-      ];
-      this.filters = [
-        { label: 'All roles', count: roles.length, active: true },
-        { label: 'System', count: systemCount },
-        { label: 'Custom', count: roles.length - systemCount }
-      ];
-    });
-  }
-
-  private mapRole(role: RoleDto, index: number): RoleRow {
-    const tones: RoleRow['tone'][] = ['purple', 'blue', 'green', 'amber'];
-    return {
-      name: role.name,
-      description: role.description ?? '',
-      level: role.isSystemRole ? 'System' : 'Custom',
-      users: role.userCount ?? 0,
-      permissions: role.permissionCount ?? 0,
-      system: role.isSystemRole ?? false,
-      tone: tones[index % tones.length]
-    };
+    this.masterApi
+      .getRoles()
+      .pipe(
+        switchMap((roles) => {
+          if (roles.length === 0) {
+            return of<RoleView[]>([]);
+          }
+          return forkJoin(
+            roles.map((role) =>
+              this.userApi.getUsers({ roleId: String(role.id), pageSize: 1 }).pipe(
+                map((result) => ({ id: String(role.id), name: role.name, code: role.code ?? '', userCount: result.totalCount })),
+                catchError(() => of({ id: String(role.id), name: role.name, code: role.code ?? '', userCount: 0 }))
+              )
+            )
+          );
+        }),
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => (this.isLoading = false))
+      )
+      .subscribe({
+        next: (roles) => (this.roles = roles),
+        error: (e: unknown) => (this.error = this.errorHandler.userMessage(e))
+      });
   }
 }

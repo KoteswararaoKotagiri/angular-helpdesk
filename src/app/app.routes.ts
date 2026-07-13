@@ -29,6 +29,17 @@ export const routes: Routes = [
           import('./features/tickets/tickets.routes').then((m) => m.TICKETS_ROUTES)
       },
       {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/profile/profile-page.component').then((m) => m.ProfilePageComponent)
+      },
+      {
+        path: 'sla',
+        canActivate: [roleGuard],
+        data: { roles: ['Admin', 'Support Engineer'] },
+        loadComponent: () => import('./features/sla/sla-page.component').then((m) => m.SlaPageComponent)
+      },
+      {
         path: 'admin',
         canActivate: [roleGuard],
         data: { roles: ['Admin', 'System Admin'] },
